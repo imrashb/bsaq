@@ -2,7 +2,10 @@
   "app": {
     "title": "BSAQ",
     "subtitle": "The SAQ for the BS",
-    "subtitle_safe": "The SAQ on a budget"
+    "subtitle_safe": "The SAQ on a budget",
+    "language": "Language",
+    "snowflakeMode": "Snowflake Mode",
+    "snowflakeTooltip": "Activate if you're a snowflake"
   },
   "nav": {
     "search": "Search",

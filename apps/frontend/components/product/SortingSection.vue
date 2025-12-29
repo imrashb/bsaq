@@ -14,6 +14,7 @@
 </template>
 
 <script setup lang="ts">
+import { useI18n } from "vue-i18n";
 import { ProductSortOptions } from "@bsaq/types";
 import { useInjectFilters } from "~/composables/useFilters";
 import DrawerSection from "~/components/common/DrawerSection.vue";

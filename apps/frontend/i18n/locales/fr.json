@@ -2,7 +2,10 @@
   "app": {
     "title": "BSAQ",
     "subtitle": "La SAQ pour les BS",
-    "subtitle_safe": "La SAQ sur un budget"
+    "subtitle_safe": "La SAQ sur un budget",
+    "language": "Langue",
+    "snowflakeMode": "Mode flocon",
+    "snowflakeTooltip": "Activer si vous êtes un flocon de neige"
   },
   "nav": {
     "search": "Rechercher",

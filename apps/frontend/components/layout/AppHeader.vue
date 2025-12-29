@@ -23,60 +23,57 @@
     </v-app-bar-title>
 
     <template #append>
-      <v-btn
-        icon
-        size="small"
-        :color="snowflakeMode ? 'info' : 'grey'"
-        variant="text"
-        class="mr-2"
-        @click="snowflakeMode = !snowflakeMode"
-      >
-        <v-icon>mdi-snowflake</v-icon>
-      </v-btn>
-      <v-btn-toggle
-        :model-value="locale"
-        mandatory
-        color="primary"
-        variant="flat"
-        :rounded="false"
-        divided
-        class="mr-4"
-        density="compact"
-        @update:model-value="setLocale"
-      >
-        <v-btn
-          v-for="l in typedLocales"
-          :key="l.code"
-          :value="l.code"
-          size="small"
-          :rounded="false"
-        >
-          {{ l.code.toUpperCase() }}
-        </v-btn>
-      </v-btn-toggle>
-      <v-btn icon color="secondary" variant="text" class="mr-2" disabled>
-        <v-icon>mdi-magnify</v-icon>
-      </v-btn>
-      <v-btn icon color="primary" variant="text">
-        <v-icon>mdi-github</v-icon>
-      </v-btn>
+      <div v-if="mdAndUp" class="d-flex align-center ga-2">
+        <LanguageMenu />
+
+        <template v-for="action in actions" :key="action.id">
+          <v-tooltip v-if="action.tooltip" location="bottom">
+            <template #activator="{ props }">
+              <v-btn
+                icon
+                size="small"
+                :color="action.color"
+                variant="text"
+                :href="action.href"
+                :target="action.target"
+                v-bind="props"
+                @click="action.onClick"
+              >
+                <v-icon>{{ action.icon }}</v-icon>
+              </v-btn>
+            </template>
+            <span>{{ action.tooltip }}</span>
+          </v-tooltip>
+          <v-btn
+            v-else
+            icon
+            size="small"
+            :color="action.color"
+            variant="text"
+            :href="action.href"
+            :target="action.target"
+            @click="action.onClick"
+          >
+            <v-icon>{{ action.icon }}</v-icon>
+          </v-btn>
+        </template>
+      </div>
+
+      <div v-else class="d-flex align-center ga-1">
+        <LanguageMenu />
+        <MobileMenu />
+      </div>
     </template>
   </v-app-bar>
 </template>
 
 <script setup lang="ts">
-import { useI18n } from "vue-i18n";
-const { locale, locales, setLocale } = useI18n();
+import { useDisplay } from "vuetify";
+import LanguageMenu from "~/components/common/LanguageMenu.vue";
+import MobileMenu from "~/components/common/MobileMenu.vue";
+import { useHeaderActions } from "~/composables/useHeaderActions";
+
 const snowflakeMode = useSnowflakeMode();
-
-// Cast locales to specific type for template usage to avoid TS errors
-const typedLocales = computed(() => {
-  return (locales.value || []) as Array<{ code: "en" | "fr"; name: string }>;
-});
+const { mdAndUp } = useDisplay();
+const actions = useHeaderActions();
 </script>
-
-<style scoped>
-.tracking-tight {
-  letter-spacing: -0.025em;
-}
-</style>
