@@ -4,9 +4,9 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "dev": "cross-env PAGE_SIZE=10 tsx src/main.ts",
+    "dev": "cross-env PAGE_SIZE=10 DISABLE_CRON=true tsx src/main.ts",
     "dev:full": "cross-env PAGE_SIZE=500 tsx src/main.ts",
-    "dev:watch": "cross-env PAGE_SIZE=10 tsx --watch src/main.ts",
+    "dev:watch": "cross-env PAGE_SIZE=10 DISABLE_CRON=true tsx --watch src/main.ts",
     "dev:watch:full": "cross-env PAGE_SIZE=500 tsx --watch src/main.ts",
     "compile": "graphql-codegen -r dotenv/config --config codegen.ts && prisma generate",
     "verify-db": "tsx src/scripts/verify-db.ts",
@@ -17,11 +17,16 @@
     "@apollo/client": "^4.0.11",
     "@prisma/adapter-pg": "^7.2.0",
     "@prisma/client": "^7.2.0",
+    "ajv": "^8.17.1",
     "dotenv": "^17.2.3",
+    "fastify": "^5.6.2",
+    "fastify-type-provider-zod": "^6.1.0",
     "graphql": "^16.12.0",
     "graphql-request": "^7.4.0",
+    "node-cron": "^4.2.1",
     "pg": "^8.16.3",
-    "rxjs": "^7.8.2"
+    "rxjs": "^7.8.2",
+    "zod": "^4.2.1"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.2",

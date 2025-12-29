@@ -1,7 +1,6 @@
-import { ApolloClient, InMemoryCache, HttpLink } from "@apollo/client";
-import { config, PRODUCTS_QUERY } from "../config.js";
-import { SortEnum } from "../gql/graphql.js";
-import { ProductRepository } from "../repositories/ProductRepository.js";
+import { ApolloClient } from "@apollo/client";
+import { config, PRODUCTS_QUERY } from "../config";
+import { SortEnum } from "../gql/graphql";
 import {
   Mapper,
   Product,
@@ -15,6 +14,8 @@ import {
   extractSku,
   extractUrl,
 } from "../utils.js";
+import { HttpLink } from "@apollo/client";
+import { InMemoryCache } from "@apollo/client";
 
 type ProcessingContext = {
   productList: Product[];
@@ -27,7 +28,6 @@ type ProcessingContext = {
 
 export class SaqService {
   private client: ApolloClient;
-  private repo: ProductRepository;
 
   private readonly MAPPERS: Mapper<ProductAttributes>[] = [
     {
@@ -74,7 +74,6 @@ export class SaqService {
       }),
       cache: new InMemoryCache(),
     });
-    this.repo = new ProductRepository();
   }
 
   private async addProductsToProductList(
@@ -89,7 +88,6 @@ export class SaqService {
       else {
         skus.add(product.sku);
         productList.push(product);
-        await this.repo.upsertProduct(product);
       }
     }
     return batchHasCollision;
