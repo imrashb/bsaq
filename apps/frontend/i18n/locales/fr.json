@@ -43,7 +43,9 @@
     "selectAll": "Tout sélectionner",
     "unselectAll": "Tout désélectionner",
     "min": "Min",
-    "max": "Max"
+    "max": "Max",
+    "searchForMore": "Affichage des {count} premières catégories. {link} pour en voir plus.",
+    "searchAction": "Recherchez"
   },
   "product": {
     "mlPerDollar": "ml/$",

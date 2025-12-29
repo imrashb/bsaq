@@ -31,7 +31,7 @@ import FilterControls from "./FilterControls.vue";
 import SortingSection from "./SortingSection.vue";
 import FilterSection from "./FilterSection.vue";
 
-defineProps<{
+const props = defineProps<{
   facets: Facet[];
 }>();
 

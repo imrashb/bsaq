@@ -1,7 +1,8 @@
 <template>
-  <div class="h-100 d-flex flex-column">
+  <div ref="rootRef" class="h-100 d-flex flex-column search-container">
     <div class="pt-1">
       <v-text-field
+        ref="searchInput"
         v-model="searchQuery"
         :placeholder="$t('common.search')"
         density="compact"
@@ -28,7 +29,7 @@
 
     <div class="w-100">
       <v-checkbox
-        v-for="facet in filteredFacets"
+        v-for="facet in visibleFacets"
         :key="facet.category"
         v-model="categories"
         :value="facet.category"
@@ -63,6 +64,26 @@
       </v-checkbox>
 
       <div
+        v-if="filteredFacets.length > VISIBLE_LIMIT"
+        class="text-caption text-center pa-2 text-medium-emphasis bg-surface-lighten-1 rounded mt-2"
+      >
+        <i18n-t keypath="common.searchForMore" tag="span">
+          <template #count>
+            {{ VISIBLE_LIMIT }}
+          </template>
+          <template #link>
+            <a
+              href="#"
+              class="text-primary text-decoration-underline font-weight-bold"
+              @click.prevent="focusSearch"
+            >
+              {{ $t("common.searchAction") }}
+            </a>
+          </template>
+        </i18n-t>
+      </div>
+
+      <div
         v-if="facets.length === 0"
         class="text-caption text-center pa-4 text-medium-emphasis"
       >
@@ -73,7 +94,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from "vue";
+import { ref, computed, useTemplateRef } from "vue";
 import type { Facet } from "@bsaq/types";
 import { useInjectFilters } from "~/composables/useFilters";
 
@@ -84,11 +105,20 @@ const props = defineProps<{
 const { categories } = useInjectFilters();
 
 const searchQuery = ref("");
+const searchInput = useTemplateRef(
+  "searchInput"
+);
+const rootRef = useTemplateRef<HTMLElement>("rootRef");
+const VISIBLE_LIMIT = 20;
 
 const filteredFacets = computed(() => {
   if (!searchQuery.value) return props.facets;
   const q = searchQuery.value.toLowerCase();
   return props.facets.filter((f) => f.category.toLowerCase().includes(q));
+});
+
+const visibleFacets = computed(() => {
+  return filteredFacets.value.slice(0, VISIBLE_LIMIT);
 });
 
 const isAllSelected = computed(() => {
@@ -110,6 +140,13 @@ const toggleAll = () => {
     categories.value = Array.from(newSelection);
   }
 };
+
+const focusSearch = () => {
+  if (searchInput.value && rootRef.value) {
+    searchInput.value.focus({ preventScroll: true });
+    rootRef.value.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+};
 </script>
 
 <style scoped>
@@ -120,5 +157,10 @@ const toggleAll = () => {
 :deep(.v-selection-control) {
   width: 100%;
   max-width: 100%;
+}
+
+.search-container {
+  display: block;
+  scroll-margin-top: 32px;
 }
 </style>
