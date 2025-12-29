@@ -19,4 +19,8 @@ export interface GetProductsQuery {
   sort?: string;
   search?: string;
   categories?: string | string[];
+  minPrice?: number;
+  maxPrice?: number;
+  minAbv?: number;
+  maxAbv?: number;
 }

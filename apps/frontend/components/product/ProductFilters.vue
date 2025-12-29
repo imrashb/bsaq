@@ -3,7 +3,7 @@
     <v-card-title
       class="text-subtitle-1 font-weight-bold pa-4 d-flex align-center justify-space-between"
     >
-      {{ $t("common.categories") }}
+      {{ $t("common.filter") }}
       <!-- Close button on mobile? -->
       <v-btn
         icon="mdi-close"
@@ -15,73 +15,104 @@
     </v-card-title>
     <v-divider />
 
-    <div class="px-3 pt-3">
-      <v-text-field
-        v-model="searchQuery"
-        :placeholder="$t('common.search')"
-        density="compact"
-        variant="outlined"
-        hide-details
-        prepend-inner-icon="mdi-magnify"
-        clearable
-        single-line
-      ></v-text-field>
+    <div class="px-4 py-3">
+      <MinMaxFilter
+        :label="$t('common.price')"
+        v-model:min="priceMin"
+        v-model:max="priceMax"
+        prefix="$"
+        class="mb-4"
+      />
+
+      <v-divider class="mb-3" />
+
+      <MinMaxFilter
+        :label="`${$t('common.abv')} (%)`"
+        v-model:min="abvMin"
+        v-model:max="abvMax"
+        suffix="%"
+        class="mb-2"
+      />
     </div>
+    <v-divider />
 
-    <!-- Select / Unselect All Action -->
-    <div class="px-3 pb-2 pt-1 d-flex justify-end">
-      <v-btn
-        variant="text"
-        size="x-small"
-        color="primary"
-        class="text-caption"
-        @click="toggleAll"
-      >
-        {{ isAllSelected ? $t("common.unselectAll") : $t("common.selectAll") }}
-      </v-btn>
-    </div>
+    <div class="p-0">
+      <div class="px-4 py-3 d-flex align-center justify-space-between">
+        <div class="text-subtitle-2 font-weight-bold">
+          {{ $t("common.categories") }}
+        </div>
+      </div>
 
-    <div class="pa-2 overflow-y-auto overflow-x-hidden w-100">
-      <v-checkbox
-        v-for="facet in filteredFacets"
-        :key="facet.category"
-        v-model="model"
-        :value="facet.category"
-        density="compact"
-        hide-details
-        color="primary"
-        class="mb-1"
-      >
-        <template v-slot:label>
-          <div class="d-flex align-center overflow-hidden w-100">
-            <span
-              class="text-body-2 text-truncate mr-2"
-              :class="{
-                'font-weight-medium text-high-emphasis': model.includes(
-                  facet.category
-                ),
-              }"
-              :title="facet.category"
-            >
-              {{ facet.category }}
-            </span>
-            <v-spacer />
-            <v-chip
-              size="x-small"
-              variant="tonal"
-              class="font-weight-bold flex-shrink-0"
-            >
-              {{ facet.count }}
-            </v-chip>
-          </div>
-        </template>
-      </v-checkbox>
+      <div class="px-3 pt-1">
+        <v-text-field
+          v-model="searchQuery"
+          :placeholder="$t('common.search')"
+          density="compact"
+          variant="outlined"
+          hide-details
+          prepend-inner-icon="mdi-magnify"
+          clearable
+          single-line
+        ></v-text-field>
+      </div>
 
-      <div
-        v-if="facets.length === 0"
-        class="text-caption text-center pa-4 text-medium-emphasis"
-      >
-        {{ $t("common.noCategories") }}
+      <!-- Select / Unselect All Action -->
+      <div class="px-3 pb-2 pt-1 d-flex justify-end">
+        <v-btn
+          variant="text"
+          size="x-small"
+          color="primary"
+          class="text-caption"
+          @click="toggleAll"
+        >
+          {{
+            isAllSelected ? $t("common.unselectAll") : $t("common.selectAll")
+          }}
+        </v-btn>
+      </div>
+
+      <div class="pa-2 overflow-y-auto overflow-x-hidden w-100">
+        <v-checkbox
+          v-for="facet in filteredFacets"
+          :key="facet.category"
+          v-model="model"
+          :value="facet.category"
+          density="compact"
+          hide-details
+          color="primary"
+          class="mb-1"
+        >
+          <template v-slot:label>
+            <div class="d-flex align-center overflow-hidden w-100">
+              <span
+                class="text-body-2 text-truncate mr-2"
+                :class="{
+                  'font-weight-medium text-high-emphasis': model.includes(
+                    facet.category
+                  ),
+                }"
+                :title="facet.category"
+              >
+                {{ facet.category }}
+              </span>
+              <v-spacer />
+              <v-chip
+                size="x-small"
+                variant="tonal"
+                class="font-weight-bold flex-shrink-0"
+              >
+                {{ facet.count }}
+              </v-chip>
+            </div>
+          </template>
+        </v-checkbox>
+
+        <div
+          v-if="facets.length === 0"
+          class="text-caption text-center pa-4 text-medium-emphasis"
+        >
+          {{ $t("common.noCategories") }}
+        </div>
       </div>
     </div>
   </div>
@@ -92,15 +123,41 @@ import { ref, watch, computed } from "vue";
 import { useDebounceFn } from "@vueuse/core";
 import type { Facet } from "@bsaq/types";
 
+import MinMaxFilter from "./MinMaxFilter.vue";
+
 const props = defineProps<{
   facets: Facet[];
   modelValue: string[];
+  priceRange?: [number, number];
+  abvRange?: [number, number];
 }>();
 
 const emit = defineEmits<{
   (e: "update:modelValue", value: string[]): void;
+  (e: "update:priceRange", value: [number, number]): void;
+  (e: "update:abvRange", value: [number, number]): void;
   (e: "close"): void;
 }>();
+
+const priceMin = computed({
+  get: () => props.priceRange?.[0] ?? 0,
+  set: (val) => emit("update:priceRange", [val, props.priceRange?.[1] ?? 200]),
+});
+
+const priceMax = computed({
+  get: () => props.priceRange?.[1] ?? 200,
+  set: (val) => emit("update:priceRange", [props.priceRange?.[0] ?? 0, val]),
+});
+
+const abvMin = computed({
+  get: () => props.abvRange?.[0] ?? 0,
+  set: (val) => emit("update:abvRange", [val, props.abvRange?.[1] ?? 100]),
+});
+
+const abvMax = computed({
+  get: () => props.abvRange?.[1] ?? 100,
+  set: (val) => emit("update:abvRange", [props.abvRange?.[0] ?? 0, val]),
+});
 
 const searchQuery = ref("");
 const debouncedSearch = ref("");

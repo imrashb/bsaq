@@ -15,6 +15,10 @@ export class ProductService {
       sort,
       search,
       categories: rawCategories,
+      minPrice,
+      maxPrice,
+      minAbv,
+      maxAbv,
     } = query;
 
     let categories: string[] | undefined;
@@ -24,19 +28,27 @@ export class ProductService {
       categories = rawCategories.split(",");
     }
 
+    const filterOptions = {
+      search,
+      categories,
+      minPrice,
+      maxPrice,
+      minAbv,
+      maxAbv,
+    };
+
     const products = await this.repo.findAll({
       page,
       pageSize,
       sort,
-      search,
-      categories,
+      ...filterOptions,
     });
 
     // Quick count for meta (optional, but good for pagination)
-    const total = await this.repo.count(search, categories);
+    const total = await this.repo.count(filterOptions);
     const maxPureAlcoholPerDollar =
       await this.repo.getMaxPureAlcoholPerDollar();
-    const facets = await this.repo.getFacets(search);
+    const facets = await this.repo.getFacets(filterOptions);
 
     return {
       data: products,

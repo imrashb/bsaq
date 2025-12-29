@@ -19,10 +19,13 @@
       "price_asc": "Prix: Bas à Élevé",
       "price_desc": "Prix: Élevé à Bas",
       "alcohol_asc": "Alcool: Bas à Élevé",
-      "alcohol_desc": "Alcool: Élevé à Bas"
+      "alcohol_desc": "Alcool: Élevé à Bas",
+      "value_desc": "Meilleur rapport",
+      "value_asc": "Pire rapport"
     },
     "filter": "Filtrer",
     "search": "Rechercher",
+    "price": "Prix",
     "view": "Vue",
     "perPage": "Produits par page",
     "retry": "Réessayer",
@@ -34,7 +37,9 @@
     "categories": "Catégories",
     "noCategories": "Aucune catégorie trouvée",
     "selectAll": "Tout sélectionner",
-    "unselectAll": "Tout désélectionner"
+    "unselectAll": "Tout désélectionner",
+    "min": "Min",
+    "max": "Max"
   },
   "product": {
     "mlPerDollar": "ml/$",

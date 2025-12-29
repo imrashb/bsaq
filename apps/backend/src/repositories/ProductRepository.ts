@@ -54,20 +54,15 @@ export class ProductRepository {
     });
   }
 
-  async findAll(options: {
-    page: number;
-    pageSize: number;
-    sort?: string;
+  private buildWhereClause(options: {
     search?: string;
     categories?: string[];
-  }): Promise<Product[]> {
-    const { page, pageSize, sort, search, categories } = options;
-    const skip = (page - 1) * pageSize;
-
-    let orderBy: Prisma.ProductOrderByWithRelationInput = {
-      pureAlcoholPerDollar: "desc",
-    };
-
+    minPrice?: number;
+    maxPrice?: number;
+    minAbv?: number;
+    maxAbv?: number;
+  }): Prisma.ProductWhereInput {
+    const { search, categories, minPrice, maxPrice, minAbv, maxAbv } = options;
     const where: Prisma.ProductWhereInput = {};
 
     if (search) {
@@ -82,6 +77,41 @@ export class ProductRepository {
       where.category = { in: categories };
     }
 
+    if (minPrice !== undefined || maxPrice !== undefined) {
+      where.currentPrice = {};
+      if (minPrice !== undefined) where.currentPrice.gte = minPrice;
+      if (maxPrice !== undefined) where.currentPrice.lte = maxPrice;
+    }
+
+    if (minAbv !== undefined || maxAbv !== undefined) {
+      where.abv = {};
+      if (minAbv !== undefined) where.abv.gte = minAbv;
+      if (maxAbv !== undefined) where.abv.lte = maxAbv;
+    }
+
+    return where;
+  }
+
+  async findAll(options: {
+    page: number;
+    pageSize: number;
+    sort?: string;
+    search?: string;
+    categories?: string[];
+    minPrice?: number;
+    maxPrice?: number;
+    minAbv?: number;
+    maxAbv?: number;
+  }): Promise<Product[]> {
+    const { page, pageSize, sort } = options;
+    const skip = (page - 1) * pageSize;
+
+    let orderBy: Prisma.ProductOrderByWithRelationInput = {
+      pureAlcoholPerDollar: "desc",
+    };
+
+    const where = this.buildWhereClause(options);
+
     switch (sort) {
       case ProductSortOptions.PriceAsc:
         orderBy = { currentPrice: "asc" };
@@ -90,9 +120,15 @@ export class ProductRepository {
         orderBy = { currentPrice: "desc" };
         break;
       case ProductSortOptions.AlcoholAsc:
-        orderBy = { pureAlcoholPerDollar: "asc" };
+        orderBy = { abv: "asc" };
         break;
       case ProductSortOptions.AlcoholDesc:
+        orderBy = { abv: "desc" };
+        break;
+      case ProductSortOptions.ValueAsc:
+        orderBy = { pureAlcoholPerDollar: "asc" };
+        break;
+      case ProductSortOptions.ValueDesc:
         orderBy = { pureAlcoholPerDollar: "desc" };
         break;
     }
@@ -105,33 +141,28 @@ export class ProductRepository {
     });
   }
 
-  async count(search?: string, categories?: string[]): Promise<number> {
-    const where: Prisma.ProductWhereInput = {};
-    if (search) {
-      where.OR = [
-        { name: { contains: search, mode: "insensitive" } },
-        { category: { contains: search, mode: "insensitive" } },
-        { country: { contains: search, mode: "insensitive" } },
-      ];
-    }
-    if (categories && categories.length > 0) {
-      where.category = { in: categories };
-    }
+  async count(options: {
+    search?: string;
+    categories?: string[];
+    minPrice?: number;
+    maxPrice?: number;
+    minAbv?: number;
+    maxAbv?: number;
+  }): Promise<number> {
+    const where = this.buildWhereClause(options);
     return this.prisma.product.count({ where });
   }
 
-  async getFacets(search?: string): Promise<Facet[]> {
-    const where: Prisma.ProductWhereInput = {};
-
-    // Facets should be filtered by the search query to show relevant categories,
-    // but usually NOT by the selected categories (so you can see other options).
-    if (search) {
-      where.OR = [
-        { name: { contains: search, mode: "insensitive" } },
-        { category: { contains: search, mode: "insensitive" } },
-        { country: { contains: search, mode: "insensitive" } },
-      ];
-    }
+  async getFacets(options: {
+    search?: string;
+    categories?: string[];
+    minPrice?: number;
+    maxPrice?: number;
+    minAbv?: number;
+    maxAbv?: number;
+  }): Promise<Facet[]> {
+    const { categories, ...otherOptions } = options;
+    const where = this.buildWhereClause(otherOptions);
 
     const facets = await this.prisma.product.groupBy({
       by: ["category"],

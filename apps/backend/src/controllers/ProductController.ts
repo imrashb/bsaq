@@ -13,6 +13,10 @@ export async function productController(fastify: FastifyInstance) {
     sort: z.string().optional(),
     search: z.string().optional(),
     categories: z.union([z.string(), z.array(z.string())]).optional(),
+    minPrice: z.coerce.number().optional(),
+    maxPrice: z.coerce.number().optional(),
+    minAbv: z.coerce.number().optional(),
+    maxAbv: z.coerce.number().optional(),
   });
 
   fastify.withTypeProvider<ZodTypeProvider>().get(

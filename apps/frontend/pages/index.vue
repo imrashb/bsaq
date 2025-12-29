@@ -25,6 +25,8 @@
       <ProductFilters
         :facets="facets"
         v-model="selectedCategories"
+        v-model:priceRange="priceRange"
+        v-model:abvRange="abvRange"
         @close="drawer = false"
       />
     </v-navigation-drawer>
@@ -105,18 +107,26 @@ const sortBy = useStorage<ProductSortOption>(
   ProductSortOptions.AlcoholDesc
 );
 const search = ref("");
-const searchDebounced = refDebounced(search, 500);
 const selectedCategories = ref<string[]>([]);
+const priceRange = ref<[number, number]>([0, 200]);
+const abvRange = ref<[number, number]>([0, 100]);
+
 const drawer = ref(true); // Default open on desktop (controlled by permanent prop anyway), will be responsive
 
 // Data Fetching
-const productsQuery = computed(() => ({
+const rawQuery = computed(() => ({
   page: page.value,
   pageSize: itemsPerPage.value,
   sortBy: sortBy.value,
-  search: searchDebounced.value,
+  search: search.value,
   categories: selectedCategories.value,
+  minPrice: priceRange.value[0],
+  maxPrice: priceRange.value[1],
+  minAbv: abvRange.value[0],
+  maxAbv: abvRange.value[1],
 }));
+
+const productsQuery = refDebounced(rawQuery, 500);
 
 const { data: response, pending, error, refresh } = useProducts(productsQuery);
 
@@ -135,9 +145,12 @@ watch(page, () => {
 });
 
 // Reset page when filters change
-watch([itemsPerPage, sortBy, searchDebounced, selectedCategories], () => {
-  page.value = 1;
-});
+watch(
+  [itemsPerPage, sortBy, search, selectedCategories, priceRange, abvRange],
+  () => {
+    page.value = 1;
+  }
+);
 </script>
 
 <style scoped>

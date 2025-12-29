@@ -118,6 +118,8 @@ const sortOptions = computed(() => [
   },
   { title: t("common.sortBy.price_asc"), value: ProductSortOptions.PriceAsc },
   { title: t("common.sortBy.price_desc"), value: ProductSortOptions.PriceDesc },
+  { title: t("common.sortBy.value_desc"), value: ProductSortOptions.ValueDesc },
+  { title: t("common.sortBy.value_asc"), value: ProductSortOptions.ValueAsc },
 ]);
 </script>
 

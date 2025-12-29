@@ -23,6 +23,8 @@ export const ProductSortOptions = {
   PriceDesc: "price_desc",
   AlcoholAsc: "alcohol_asc",
   AlcoholDesc: "alcohol_desc",
+  ValueAsc: "value_asc",
+  ValueDesc: "value_desc",
 } as const;
 
 export type ProductSortOption =

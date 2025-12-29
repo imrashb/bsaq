@@ -6,6 +6,10 @@ export interface UseProductsParams {
   sortBy: ProductSortOption;
   search: string;
   categories: string[];
+  minPrice?: number;
+  maxPrice?: number;
+  minAbv?: number;
+  maxAbv?: number;
 }
 
 export const useProducts = (
@@ -18,6 +22,10 @@ export const useProducts = (
       sort: params.value.sortBy,
       search: params.value.search,
       categories: params.value.categories,
+      minPrice: params.value.minPrice,
+      maxPrice: params.value.maxPrice,
+      minAbv: params.value.minAbv,
+      maxAbv: params.value.maxAbv,
     })),
   });
 };

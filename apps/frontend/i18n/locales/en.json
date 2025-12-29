@@ -19,10 +19,13 @@
       "price_asc": "Price: Low to High",
       "price_desc": "Price: High to Low",
       "alcohol_asc": "Alcohol: Low to High",
-      "alcohol_desc": "Alcohol: High to Low"
+      "alcohol_desc": "Alcohol: High to Low",
+      "value_desc": "Best Value",
+      "value_asc": "Worst Value"
     },
     "filter": "Filter",
     "search": "Search",
+    "price": "Price",
     "view": "View",
     "perPage": "Products per page",
     "retry": "Retry",
@@ -34,7 +37,9 @@
     "categories": "Categories",
     "noCategories": "No categories found",
     "selectAll": "Select All",
-    "unselectAll": "Unselect All"
+    "unselectAll": "Unselect All",
+    "min": "Min",
+    "max": "Max"
   },
   "product": {
     "mlPerDollar": "ml/$",
