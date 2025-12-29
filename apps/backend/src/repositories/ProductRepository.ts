@@ -57,19 +57,58 @@ export class ProductRepository {
   async findAll(options: {
     page: number;
     pageSize: number;
-    sortBy?: Prisma.ProductOrderByWithRelationInput;
+    sort?: string;
+    search?: string;
   }): Promise<Product[]> {
-    const { page, pageSize, sortBy } = options;
+    const { page, pageSize, sort, search } = options;
     const skip = (page - 1) * pageSize;
+
+    let orderBy: Prisma.ProductOrderByWithRelationInput = {
+      pureAlcoholPerDollar: "desc",
+    };
+
+    const where: Prisma.ProductWhereInput = {};
+
+    if (search) {
+      where.OR = [
+        { name: { contains: search, mode: "insensitive" } },
+        { category: { contains: search, mode: "insensitive" } },
+        { country: { contains: search, mode: "insensitive" } },
+      ];
+    }
+
+    switch (sort) {
+      case "price_asc":
+        orderBy = { currentPrice: "asc" };
+        break;
+      case "price_desc":
+        orderBy = { currentPrice: "desc" };
+        break;
+      case "alcohol_asc":
+        orderBy = { pureAlcoholPerDollar: "asc" };
+        break;
+      case "alcohol_desc":
+        orderBy = { pureAlcoholPerDollar: "desc" };
+        break;
+    }
 
     return this.prisma.product.findMany({
       skip,
       take: pageSize,
-      orderBy: sortBy ? sortBy : { pureAlcoholPerDollar: "desc" },
+      orderBy,
+      where,
     });
   }
 
-  async count(): Promise<number> {
-    return this.prisma.product.count();
+  async count(search?: string): Promise<number> {
+    const where: Prisma.ProductWhereInput = {};
+    if (search) {
+      where.OR = [
+        { name: { contains: search, mode: "insensitive" } },
+        { category: { contains: search, mode: "insensitive" } },
+        { country: { contains: search, mode: "insensitive" } },
+      ];
+    }
+    return this.prisma.product.count({ where });
   }
 }

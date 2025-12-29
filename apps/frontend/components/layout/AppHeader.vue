@@ -6,11 +6,15 @@
       </v-avatar>
     </template>
 
-    <v-app-bar-title class="font-weight-bold tracking-tight text-white">
-      {{ $t("app.title") }}
-      <span class="text-caption text-medium-emphasis">{{
-        $t("app.subtitle")
-      }}</span>
+    <v-app-bar-title>
+      <div class="d-flex flex-column">
+        <span class="font-weight-bold text-h5 text-white">
+          {{ $t("app.title") }}
+        </span>
+        <span class="text-caption text-medium-emphasis">{{
+          $t("app.subtitle")
+        }}</span>
+      </div>
     </v-app-bar-title>
 
     <template #append>

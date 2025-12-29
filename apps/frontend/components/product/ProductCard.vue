@@ -5,27 +5,9 @@
     hover
   >
     <!-- List View Layout -->
-    <div v-if="isList" class="d-flex flex-row h-100">
-      <v-avatar class="ma-3" size="120" rounded="lg">
-        <v-img
-          :src="product.imageUrl || product.url"
-          class="bg-surface-lighten-1"
-        >
-          <template #placeholder>
-            <div
-              class="d-flex align-center justify-center fill-height bg-surface-lighten-2"
-            >
-              <v-icon color="secondary"> mdi-image-off </v-icon>
-            </div>
-          </template>
-          <template #error>
-            <div
-              class="d-flex align-center justify-center fill-height bg-surface-lighten-2"
-            >
-              <v-icon color="error"> mdi-image-broken </v-icon>
-            </div>
-          </template>
-        </v-img>
+    <div v-if="isList" class="d-flex flex-row align-center h-100">
+      <v-avatar class="ma-3 pa-3" size="128" rounded="lg">
+        <ProductImage :src="product.imageUrl || product.url" />
       </v-avatar>
 
       <div class="flex-grow-1 py-3 pr-3 d-flex flex-column">
@@ -56,7 +38,7 @@
         <div class="d-flex align-center mt-auto">
           <div class="mr-4">
             <div class="text-h6 font-weight-bold text-success">
-              ${{ product.currentPrice }}
+              {{ formatPrice(product.currentPrice) }}
             </div>
             <div
               v-if="
@@ -65,7 +47,7 @@
               "
               class="text-caption text-decoration-line-through text-disabled"
             >
-              ${{ product.originalPrice }}
+              {{ formatPrice(product.originalPrice) }}
             </div>
           </div>
 
@@ -74,12 +56,10 @@
           <div class="text-caption text-medium-emphasis">
             <div>
               <strong class="text-white">{{ product.volumeMl }}</strong>
-              {{ $t("common.volume") }}
+              {{ $t("common.ml") }}
             </div>
             <div>
-              <strong class="text-white"
-                >{{ (product.abv * 100).toFixed(1) }}%</strong
-              >
+              <strong class="text-white">{{ product.abv.toFixed(1) }}%</strong>
               {{ $t("common.abv") }}
             </div>
           </div>
@@ -94,34 +74,7 @@
             :href="product.url"
             target="_blank"
           >
-            {{ $t("common.view") }}
-          </v-btn>
-          />
-
-          <div class="text-caption text-medium-emphasis">
-            <div>
-              <strong class="text-white">{{ product.volumeMl }}</strong>
-              {{ $t("common.volume") }}
-            </div>
-            <div>
-              <strong class="text-white"
-                >{{ (product.abv * 100).toFixed(1) }}%</strong
-              >
-              {{ $t("common.abv") }}
-            </div>
-          </div>
-
-          <v-spacer />
-
-          <v-btn
-            color="primary"
-            variant="tonal"
-            size="small"
-            append-icon="mdi-open-in-new"
-            :href="product.url"
-            target="_blank"
-          >
-            {{ $t("common.view") }}
+            {{ $t("common.viewAtSaq") }}
           </v-btn>
         </div>
       </div>
@@ -129,38 +82,21 @@
 
     <!-- Grid View Layout -->
     <template v-else>
-      <v-img
-        :src="product.imageUrl || product.url"
-        height="220"
-        class="bg-surface-lighten-1 position-relative"
-      >
-        <template #placeholder>
-          <div
-            class="d-flex align-center justify-center fill-height bg-surface-lighten-2"
-          >
-            <v-icon color="secondary"> mdi-image-off </v-icon>
+      <div class="bg-surface-lighten-1 pa-4">
+        <ProductImage :src="product.imageUrl || product.url" height="175">
+          <div class="position-absolute top-0 right-0 pa-2">
+            <v-chip
+              color="secondary"
+              variant="flat"
+              size="small"
+              class="font-weight-bold elevation-4"
+            >
+              {{ (product.pureAlcoholPerDollar ?? 0).toFixed(2) }}
+              {{ $t("product.mlPerDollar") }}
+            </v-chip>
           </div>
-        </template>
-        <template #error>
-          <div
-            class="d-flex align-center justify-center fill-height bg-surface-lighten-2"
-          >
-            <v-icon color="error"> mdi-image-broken </v-icon>
-          </div>
-        </template>
-
-        <div class="position-absolute top-0 right-0 pa-2">
-          <v-chip
-            color="secondary"
-            variant="flat"
-            size="small"
-            class="font-weight-bold elevation-4"
-          >
-            {{ (product.pureAlcoholPerDollar ?? 0).toFixed(2) }}
-            {{ $t("product.mlPerDollar") }}
-          </v-chip>
-        </div>
-      </v-img>
+        </ProductImage>
+      </div>
 
       <v-card-item class="pb-0">
         <v-card-title
@@ -177,9 +113,9 @@
       <v-card-text class="flex-grow-1 pt-3">
         <div class="d-flex justify-space-between align-end mb-3">
           <div>
-            <span class="text-h5 font-weight-bold text-success"
-              >${{ product.currentPrice }}</span
-            >
+            <span class="text-h5 font-weight-bold text-success">{{
+              formatPrice(product.currentPrice)
+            }}</span>
             <div
               v-if="
                 product.originalPrice &&
@@ -187,7 +123,7 @@
               "
               class="text-caption text-decoration-line-through text-disabled ml-1"
             >
-              ${{ product.originalPrice }}
+              {{ formatPrice(product.originalPrice) }}
             </div>
           </div>
         </div>
@@ -195,10 +131,8 @@
         <div
           class="d-flex justify-space-between text-caption text-medium-emphasis bg-surface-lighten-1 pa-2 rounded"
         >
-          <span>{{ product.volumeMl }} {{ $t("common.volume") }}</span>
-          <span
-            >{{ (product.abv * 100).toFixed(1) }}% {{ $t("common.abv") }}</span
-          >
+          <span>{{ product.volumeMl }} {{ $t("common.ml") }}</span>
+          <span>{{ product.abv.toFixed(1) }}% {{ $t("common.abv") }}</span>
           <span>{{ product.country }}</span>
         </div>
       </v-card-text>
@@ -213,7 +147,7 @@
           :href="product.url"
           target="_blank"
         >
-          {{ $t("common.viewDetails") }}
+          {{ $t("common.viewAtSaq") }}
           <v-icon end icon="mdi-arrow-right" size="small" />
         </v-btn>
       </v-card-actions>
@@ -223,11 +157,17 @@
 
 <script setup lang="ts">
 import type { Product } from "@bsaq/types";
+import ProductImage from "./ProductImage.vue";
 
 defineProps<{
   product: Product;
   isList?: boolean;
 }>();
+
+const formatPrice = (price: number | null | undefined) => {
+  if (price === null || price === undefined) return "";
+  return `${price.toFixed(2)} $`;
+};
 </script>
 
 <style scoped>
@@ -239,8 +179,5 @@ defineProps<{
 }
 .bg-surface-lighten-1 {
   background-color: rgba(255, 255, 255, 0.05) !important;
-}
-.bg-surface-lighten-2 {
-  background-color: rgba(255, 255, 255, 0.1) !important;
 }
 </style>

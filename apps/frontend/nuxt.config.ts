@@ -6,6 +6,8 @@ export default defineNuxtConfig({
   build: {
     transpile: ["vuetify"],
   },
+  compatibilityDate: "2025-12-29",
+  css: ["@mdi/font/css/materialdesignicons.css"],
   modules: [
     (_options, nuxt) => {
       nuxt.hooks.hook("vite:extendConfig", (config) => {

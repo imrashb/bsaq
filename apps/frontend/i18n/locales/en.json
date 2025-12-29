@@ -1,7 +1,7 @@
 {
   "app": {
     "title": "BSAQ",
-    "subtitle": "Best Value Alcohol"
+    "subtitle": "The SAQ for the BS"
   },
   "nav": {
     "search": "Search",
@@ -9,15 +9,25 @@
   },
   "home": {
     "title": "Find Your Deal",
-    "subtitle": "Browsing the best value alcohol at the SAQ, sorted by pure alcohol per dollar."
+    "subtitle": "Browsing the best value alcohol at the SAQ, sorted by the most alcohol per dollar.",
+    "results": "{count} products"
   },
   "common": {
+    "sort": "Sort by",
+    "sortBy": {
+      "price_asc": "Price: Low to High",
+      "price_desc": "Price: High to Low",
+      "alcohol_asc": "Alcohol: Low to High",
+      "alcohol_desc": "Alcohol: High to Low"
+    },
+    "filter": "Filter",
+    "search": "Search",
     "view": "View",
-    "perPage": "Per Page",
+    "perPage": "Products per page",
     "retry": "Retry",
     "viewDetails": "View Details",
-    "viewAtSaq": "View at SAQ",
-    "volume": "Volume",
+    "viewAtSaq": "View on SAQ",
+    "ml": "ml",
     "abv": "ABV",
     "noImage": "No Image"
   },

@@ -1,49 +1,32 @@
 <template>
-  <v-container class="py-8">
+  <v-container class="py-8 d-flex flex-column gap-4">
     <!-- Header Section -->
     <div
-      class="d-flex flex-column flex-md-row align-start align-md-center justify-space-between mb-8 gap-4"
+      class="d-flex flex-column flex-md-row align-start align-md-center justify-space-between gap-4"
     >
       <div>
-        <h1 class="text-h3 font-weight-bold text-gradient mb-2">
+        <h1 class="text-h3 font-weight-bold text-gradient">
           {{ $t("home.title") }}
         </h1>
-        <p
-          class="text-body-1 text-medium-emphasis"
-          style="max-width: 600px"
-        >
+        <p class="text-body-1 text-medium-emphasis" style="max-width: 600px">
           {{ $t("home.subtitle") }}
         </p>
       </div>
-
-      <div
-        class="d-flex align-center gap-4 bg-surface-lighten-1 pa-2 rounded-lg elevation-1"
-      >
-        <ViewToggle v-model="viewMode" />
-        <v-divider
-          vertical
-          class="mx-2"
-        />
-        <v-select
-          v-model="itemsPerPage"
-          :items="[10, 20, 50, 100]"
-          :label="$t('common.perPage')"
-          hide-details
-          density="compact"
-          variant="plain"
-          class="nav-select"
-          style="min-width: 100px"
-        />
-      </div>
     </div>
+
+    <!-- Toolbar Section -->
+    <ProductToolbar
+      v-model:view-mode="viewMode"
+      v-model:items-per-page="itemsPerPage"
+      v-model:sort-by="sortBy"
+      v-model:search="search"
+      :total="total"
+    />
 
     <!-- Content Section -->
     <v-fade-transition mode="out-in">
       <!-- Loading State -->
-      <v-row
-        v-if="pending"
-        key="loading"
-      >
+      <v-row v-if="pending" key="loading">
         <v-col
           v-for="n in itemsPerPage"
           :key="n"
@@ -89,27 +72,19 @@
       </v-alert>
 
       <!-- Products State -->
-      <div
-        v-else
-        key="content"
-      >
-        <ProductGrid
-          :products="products"
-          :is-list="viewMode === 'list'"
-        />
+      <div v-else key="content" class="d-flex flex-column gap-4">
+        <ProductGrid :products="products" :is-list="viewMode === 'list'" />
 
         <!-- Pagination -->
-        <div class="d-flex justify-center mt-8">
-          <v-pagination
-            v-if="total > 0"
-            v-model="page"
-            :length="totalPages"
-            :total-visible="7"
-            color="primary"
-            rounded="circle"
-            elevation="2"
-          />
-        </div>
+        <v-pagination
+          v-if="total > 0"
+          v-model="page"
+          :length="totalPages"
+          :total-visible="7"
+          color="primary"
+          rounded="circle"
+          elevation="2"
+        />
       </div>
     </v-fade-transition>
   </v-container>
@@ -120,11 +95,15 @@ import type { Product } from "@bsaq/types";
 import { useStorage } from "@vueuse/core";
 import ViewToggle from "~/components/common/ViewToggle.vue";
 import ProductGrid from "~/components/product/ProductGrid.vue";
+import ProductToolbar from "~/components/product/ProductToolbar.vue";
 
 // State
 const page = ref(1);
 const itemsPerPage = useStorage("bsaq-per-page", 20);
-const viewMode = useStorage<"grid" | "list">("bsaq-view-mode", "grid");
+const viewMode = ref<"grid" | "list">("grid");
+const sortBy = useStorage("bsaq-sort-by", "alcohol_desc");
+const search = ref("");
+const searchDebounced = refDebounced(search, 500);
 
 // Data Fetching
 const {
@@ -138,8 +117,10 @@ const {
     query: {
       page,
       pageSize: itemsPerPage,
+      sort: sortBy,
+      search: searchDebounced,
     },
-    watch: [page, itemsPerPage], // Auto-refetch when these change
+    watch: [page, itemsPerPage, sortBy, searchDebounced], // Auto-refetch when these change
   }
 );
 

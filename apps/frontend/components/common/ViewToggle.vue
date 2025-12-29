@@ -1,39 +1,16 @@
 <template>
-  <div class="d-flex align-center gap-2">
-    <span class="text-caption text-medium-emphasis mr-2 d-none d-sm-block">{{ $t("common.view") }}:</span>
-    <v-btn-toggle
-      v-model="internalMode"
-      mandatory
-      density="compact"
-      color="primary"
-      variant="outlined"
-      class="rounded-lg"
-    >
-      <v-btn
-        value="grid"
-        icon="mdi-view-grid-outline"
-        size="small"
-      />
-      <v-btn
-        value="list"
-        icon="mdi-view-list-outline"
-        size="small"
-      />
-    </v-btn-toggle>
-  </div>
+  <v-btn-toggle
+    v-model="internalMode"
+    mandatory
+    color="primary"
+    variant="text"
+    :rounded="false"
+  >
+    <v-btn value="grid" :rounded="false" icon="mdi-view-grid-outline" />
+    <v-btn value="list" :rounded="false" icon="mdi-view-list-outline" />
+  </v-btn-toggle>
 </template>
 
 <script setup lang="ts">
-const props = defineProps<{
-  modelValue: "grid" | "list";
-}>();
-
-const emit = defineEmits<{
-  (e: "update:modelValue", value: "grid" | "list"): void;
-}>();
-
-const internalMode = computed({
-  get: () => props.modelValue,
-  set: (val) => emit("update:modelValue", val),
-});
+const internalMode = defineModel<"grid" | "list">({ required: true });
 </script>

@@ -21,6 +21,8 @@ const repo = new ProductRepository();
 const QuerySchema = z.object({
   page: z.coerce.number().min(1).default(1),
   pageSize: z.coerce.number().min(1).max(100).default(10),
+  sort: z.string().optional(),
+  search: z.string().optional(),
 });
 
 fastify.withTypeProvider<ZodTypeProvider>().get(
@@ -31,16 +33,18 @@ fastify.withTypeProvider<ZodTypeProvider>().get(
     },
   },
   async (request, reply) => {
-    const { page, pageSize } = request.query;
+    const { page, pageSize, sort, search } = request.query;
 
     try {
       const products = await repo.findAll({
         page,
         pageSize,
+        sort,
+        search,
       });
 
       // Quick count for meta (optional, but good for pagination)
-      const total = await repo.count();
+      const total = await repo.count(search);
 
       return {
         data: products,
