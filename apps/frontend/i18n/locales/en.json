@@ -24,6 +24,7 @@
       "value_asc": "Worst Value"
     },
     "filter": "Filter",
+    "filterAndSort": "Filter & Sort",
     "search": "Search",
     "price": "Price",
     "view": "View",

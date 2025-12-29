@@ -31,8 +31,9 @@
         <!-- Toolbar -->
         <div class="mb-4">
           <ProductToolbar
-            v-model:viewMode="viewMode"
+            :view-mode="viewMode"
             :total="total"
+            @update:view-mode="viewModePreference = $event"
             @toggle-filters="drawer = !drawer"
           />
         </div>
@@ -79,6 +80,7 @@
 
 <script setup lang="ts">
 import { useStorage } from "@vueuse/core";
+import { useDisplay } from "vuetify";
 import ProductGrid from "~/components/product/ProductGrid.vue";
 import ProductToolbar from "~/components/product/ProductToolbar.vue";
 import ProductFilters from "~/components/product/ProductFilters.vue";
@@ -87,8 +89,16 @@ import { useInjectFilters } from "~/composables/useFilters";
 
 const { page, itemsPerPage } = useInjectFilters();
 
-const viewMode = useStorage<"grid" | "list">("bsaq-view-mode", "grid");
+const viewModePreference = useStorage<"grid" | "list">(
+  "bsaq-view-mode",
+  "grid"
+);
 const drawer = ref(true);
+
+const { mdAndUp } = useDisplay();
+const viewMode = computed(() =>
+  mdAndUp.value ? viewModePreference.value : "grid"
+);
 
 const { data: response, pending, error, refresh } = useProducts();
 

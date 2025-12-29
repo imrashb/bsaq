@@ -27,7 +27,7 @@ export function useProvideFilters(): FilterState {
   const itemsPerPage = useStorage("bsaq-per-page", 20);
   const sortBy = useStorage<ProductSortOption>(
     "bsaq-sort-by",
-    ProductSortOptions.AlcoholDesc
+    ProductSortOptions.ValueDesc
   );
   const search = ref("");
   const categories = ref<string[]>([]);

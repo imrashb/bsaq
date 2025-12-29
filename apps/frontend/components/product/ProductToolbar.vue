@@ -1,111 +1,55 @@
 <template>
-  <v-toolbar color="surface" class="rounded-lg elevation-1 pr-2">
-    <!-- Results Count (hidden on very small screens if needed, but keeping for now) -->
-    <div
-      class="text-subtitle-1 font-weight-medium text-medium-emphasis ml-4 d-none d-sm-block"
-    >
-      {{ $t("home.results", { count: total }) }}
-    </div>
-
-    <!-- Mobile Filter Toggle -->
-    <v-btn
-      prepend-icon="mdi-filter-variant"
-      variant="text"
-      color="primary"
-      class="d-md-none ml-2"
-      @click="$emit('toggle-filters')"
-    >
-      {{ $t("common.filter") }}
-    </v-btn>
-
-    <v-spacer />
-
+  <v-toolbar color="surface" class="d-flex rounded-lg elevation-1 px-4">
     <div class="d-flex align-center ga-2 flex-1-0">
-      <!-- Search/Filter (Placeholder for now) -->
-      <v-text-field
-        v-model="search"
-        :label="$t('common.search')"
-        prepend-inner-icon="mdi-magnify"
-        variant="outlined"
-        density="compact"
-        clearable
-        hide-details
-      />
+      <div class="text-subtitle-1 font-weight-medium text-medium-emphasis">
+        {{ $t("home.results", { count: total }) }}
+      </div>
+      <v-btn
+        v-if="!mdAndUp"
+        prepend-icon="mdi-tune"
+        variant="text"
+        color="primary"
+        @click="$emit('toggle-filters')"
+      >
+        {{ $t("common.filterAndSort") }}
+      </v-btn>
 
-      <v-divider vertical class="mx-2" />
+      <v-spacer />
 
-      <!-- Sort Dropdown -->
-      <v-select
-        v-model="sortBy"
-        :items="sortOptions"
-        :label="$t('common.sort')"
-        item-title="title"
-        item-value="value"
-        prepend-inner-icon="mdi-sort"
-        variant="outlined"
-        density="compact"
-        hide-details
-      />
-
-      <v-divider vertical class="mx-2" />
-      <ViewToggle v-model="viewMode" />
-      <v-divider vertical class="mx-2" />
-      <v-select
-        v-model="itemsPerPage"
-        :items="[10, 20, 50, 100]"
-        :label="$t('common.perPage')"
-        hide-details
-        density="compact"
-        variant="plain"
-        class="nav-select"
-        style="min-width: 100px"
-      />
+      <div
+        v-if="mdAndUp"
+        class="d-flex align-center ga-2 flex-1-0"
+        style="max-width: 400px"
+      >
+        <v-text-field
+          v-model="search"
+          :label="$t('common.search')"
+          prepend-inner-icon="mdi-magnify"
+          variant="outlined"
+          density="compact"
+          clearable
+          hide-details
+        />
+      </div>
+      <ViewToggle v-if="mdAndUp" v-model="viewMode" />
     </div>
   </v-toolbar>
 </template>
 
 <script setup lang="ts">
+import { useDisplay } from "vuetify";
 import ViewToggle from "~/components/common/ViewToggle.vue";
-import { ProductSortOptions } from "@bsaq/types";
 import { useInjectFilters } from "~/composables/useFilters";
 
-const props = defineProps<{
+defineProps<{
   total: number;
 }>();
 
-const emit = defineEmits<{
+defineEmits<{
   (e: "toggle-filters"): void;
 }>();
 
+const { mdAndUp } = useDisplay();
 const viewMode = defineModel<"grid" | "list">("viewMode", { required: true });
-
-const { search, sortBy, itemsPerPage } = useInjectFilters();
-
-const { t } = useI18n();
-
-const sortOptions = computed(() => [
-  {
-    title: t("common.sortBy.alcohol_desc"),
-    value: ProductSortOptions.AlcoholDesc,
-  },
-  {
-    title: t("common.sortBy.alcohol_asc"),
-    value: ProductSortOptions.AlcoholAsc,
-  },
-  { title: t("common.sortBy.price_asc"), value: ProductSortOptions.PriceAsc },
-  { title: t("common.sortBy.price_desc"), value: ProductSortOptions.PriceDesc },
-  { title: t("common.sortBy.value_desc"), value: ProductSortOptions.ValueDesc },
-  { title: t("common.sortBy.value_asc"), value: ProductSortOptions.ValueAsc },
-]);
+const { search } = useInjectFilters();
 </script>
-
-<style scoped>
-.gap-2 {
-  gap: 8px;
-}
-:deep(.nav-select .v-field__input) {
-  padding-top: 0;
-  padding-bottom: 0;
-  min-height: 32px;
-}
-</style>
