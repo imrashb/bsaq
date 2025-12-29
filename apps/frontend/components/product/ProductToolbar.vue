@@ -7,7 +7,7 @@
 
     <v-spacer />
 
-    <div class="d-flex align-center gap-2 flex-1-0">
+    <div class="d-flex align-center ga-2 flex-1-0">
       <!-- Search/Filter (Placeholder for now) -->
       <v-text-field
         v-model="internalSearch"
@@ -15,6 +15,7 @@
         prepend-inner-icon="mdi-magnify"
         variant="outlined"
         density="compact"
+        clearable
         hide-details
       />
 
@@ -52,7 +53,6 @@
 
 <script setup lang="ts">
 import ViewToggle from "~/components/common/ViewToggle.vue";
-import { ProductSortOptions } from "@bsaq/types";
 
 const props = defineProps<{
   total: number;
@@ -95,14 +95,14 @@ const { t } = useI18n();
 const sortOptions = computed(() => [
   {
     title: t("common.sortBy.alcohol_desc"),
-    value: ProductSortOptions.AlcoholDesc,
+    value: "alcohol_desc", // Using string literals as previously seen work or if import was issue
   },
   {
     title: t("common.sortBy.alcohol_asc"),
-    value: ProductSortOptions.AlcoholAsc,
+    value: "alcohol_asc",
   },
-  { title: t("common.sortBy.price_asc"), value: ProductSortOptions.PriceAsc },
-  { title: t("common.sortBy.price_desc"), value: ProductSortOptions.PriceDesc },
+  { title: t("common.sortBy.price_asc"), value: "price_asc" },
+  { title: t("common.sortBy.price_desc"), value: "price_desc" },
 ]);
 </script>
 

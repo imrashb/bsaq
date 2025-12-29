@@ -45,6 +45,7 @@ fastify.withTypeProvider<ZodTypeProvider>().get(
 
       // Quick count for meta (optional, but good for pagination)
       const total = await repo.count(search);
+      const maxPureAlcoholPerDollar = await repo.getMaxPureAlcoholPerDollar();
 
       return {
         data: products,
@@ -52,6 +53,7 @@ fastify.withTypeProvider<ZodTypeProvider>().get(
           page,
           pageSize,
           total,
+          maxPureAlcoholPerDollar,
         },
       };
     } catch (err) {

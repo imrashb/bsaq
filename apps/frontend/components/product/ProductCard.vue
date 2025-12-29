@@ -12,9 +12,15 @@
 
       <div class="flex-grow-1 py-3 pr-3 d-flex flex-column">
         <div class="d-flex justify-space-between align-start">
-          <div>
-            <div class="text-h6 font-weight-bold text-truncate">
-              {{ product.name }}
+          <div class="flex-grow-1 mr-4">
+            <div class="d-flex align-center justify-space-between w-100 mb-1">
+              <div class="text-h6 font-weight-bold text-truncate">
+                {{ product.name }}
+              </div>
+              <ProductAlcoholMeter
+                :value="product.pureAlcoholPerDollar ?? 0"
+                :max="maxPureAlcoholPerDollar || 15"
+              />
             </div>
             <div class="text-caption text-medium-emphasis mb-2">
               <v-icon size="x-small" color="secondary" class="mr-1">
@@ -23,14 +29,6 @@
               {{ product.category }} • {{ product.country }}
             </div>
           </div>
-          <v-chip
-            color="secondary"
-            variant="flat"
-            size="small"
-            class="font-weight-bold elevation-2"
-          >
-            {{ (product.pureAlcoholPerDollar ?? 0).toFixed(2) }} ml/$
-          </v-chip>
         </div>
 
         <v-divider class="my-2 border-opacity-25" />
@@ -83,22 +81,16 @@
     <!-- Grid View Layout -->
     <template v-else>
       <div class="bg-surface-lighten-1 pa-4">
-        <ProductImage :src="product.imageUrl || product.url" height="175">
-          <div class="position-absolute top-0 right-0 pa-2">
-            <v-chip
-              color="secondary"
-              variant="flat"
-              size="small"
-              class="font-weight-bold elevation-4"
-            >
-              {{ (product.pureAlcoholPerDollar ?? 0).toFixed(2) }}
-              {{ $t("product.mlPerDollar") }}
-            </v-chip>
-          </div>
-        </ProductImage>
+        <ProductImage :src="product.imageUrl || product.url" height="175" />
       </div>
 
       <v-card-item class="pb-0">
+        <div class="mb-2">
+          <ProductAlcoholMeter
+            :value="product.pureAlcoholPerDollar ?? 0"
+            :max="maxPureAlcoholPerDollar || 15"
+          />
+        </div>
         <v-card-title
           class="text-subtitle-1 font-weight-bold line-clamp-2"
           style="line-height: 1.25"
@@ -158,10 +150,12 @@
 <script setup lang="ts">
 import type { Product } from "@bsaq/types";
 import ProductImage from "./ProductImage.vue";
+import ProductAlcoholMeter from "./ProductAlcoholMeter.vue";
 
-defineProps<{
+const props = defineProps<{
   product: Product;
   isList?: boolean;
+  maxPureAlcoholPerDollar?: number;
 }>();
 
 const formatPrice = (price: number | null | undefined) => {
@@ -179,5 +173,9 @@ const formatPrice = (price: number | null | undefined) => {
 }
 .bg-surface-lighten-1 {
   background-color: rgba(255, 255, 255, 0.05) !important;
+}
+.backdrop-blur {
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
 }
 </style>

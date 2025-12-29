@@ -111,4 +111,13 @@ export class ProductRepository {
     }
     return this.prisma.product.count({ where });
   }
+
+  async getMaxPureAlcoholPerDollar(): Promise<number> {
+    const result = await this.prisma.product.aggregate({
+      _max: {
+        pureAlcoholPerDollar: true,
+      },
+    });
+    return result._max.pureAlcoholPerDollar as number; // Fallback default
+  }
 }

@@ -73,7 +73,11 @@
 
       <!-- Products State -->
       <div v-else key="content" class="d-flex flex-column gap-4">
-        <ProductGrid :products="products" :is-list="viewMode === 'list'" />
+        <ProductGrid
+          :products="products"
+          :is-list="viewMode === 'list'"
+          :max-pure-alcohol-per-dollar="maxPureAlcoholPerDollar"
+        />
 
         <!-- Pagination -->
         <v-pagination
@@ -111,26 +115,34 @@ const {
   pending,
   error,
   refresh,
-} = await useFetch<{ data: Product[]; meta: { total: number } }>(
-  "/api/products",
-  {
-    query: {
-      page,
-      pageSize: itemsPerPage,
-      sort: sortBy,
-      search: searchDebounced,
-    },
-    watch: [page, itemsPerPage, sortBy, searchDebounced], // Auto-refetch when these change
-  }
-);
+} = await useFetch<{
+  data: Product[];
+  meta: { total: number; maxPureAlcoholPerDollar: number };
+}>("/api/products", {
+  query: {
+    page,
+    pageSize: itemsPerPage,
+    sort: sortBy,
+    search: searchDebounced,
+  },
+  watch: [page, itemsPerPage, sortBy, searchDebounced], // Auto-refetch when these change
+});
 
 const products = computed(() => response.value?.data || []);
 const total = computed(() => response.value?.meta?.total || 0);
+const maxPureAlcoholPerDollar = computed(
+  () => response.value?.meta?.maxPureAlcoholPerDollar || 15
+);
 const totalPages = computed(() => Math.ceil(total.value / itemsPerPage.value));
 
 // Scroll to top on page change
 watch(page, () => {
   window.scrollTo({ top: 0, behavior: "smooth" });
+});
+
+// Reset page when filters change
+watch([itemsPerPage, sortBy, searchDebounced], () => {
+  page.value = 1;
 });
 </script>
 
