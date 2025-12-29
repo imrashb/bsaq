@@ -26,6 +26,7 @@
           :color="locale === l.code ? 'primary' : 'medium-emphasis'"
           size="small"
           class="px-2 min-w-0"
+          :rounded="false"
           @click="setLocale(l.code)"
         >
           {{ l.code.toUpperCase() }}

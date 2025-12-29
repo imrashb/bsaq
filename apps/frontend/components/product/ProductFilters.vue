@@ -161,4 +161,9 @@ div::-webkit-scrollbar-thumb:hover {
 :deep(.v-selection-control .v-label) {
   width: 100%;
 }
+
+:deep(.v-selection-control) {
+  width: 100%;
+  max-width: 100%;
+}
 </style>
