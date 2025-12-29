@@ -6,9 +6,19 @@
     offset="10"
     transition="fade-transition"
   >
-    <div class="d-flex flex-column ga-2" style="min-width: 150px">
+    <div
+      class="d-flex flex-column ga-2"
+      style="min-width: 150px; max-width: 220px"
+    >
       <div class="font-weight-bold text-center">
         {{ title }}
+      </div>
+      <div
+        v-if="description"
+        class="text-caption text-center text-medium-emphasis mb-2"
+        style="line-height: 1.2"
+      >
+        {{ description }}
       </div>
 
       <div class="position-relative w-100" style="height: 12px">
@@ -44,6 +54,7 @@
 <script setup lang="ts">
 const props = defineProps<{
   title: string;
+  description?: string;
   value: number;
   max: number;
   minThreshold: number;

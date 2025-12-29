@@ -37,7 +37,8 @@
     "unselectAll": "Tout désélectionner"
   },
   "product": {
-    "mlPerDollar": "ml/$"
+    "mlPerDollar": "ml/$",
+    "mlPerDollarTooltip": "Plus la valeur est élevée, plus vous obtenez d'alcool pour votre dollar"
   },
   "errors": {
     "loading": "Impossible de charger les produits"

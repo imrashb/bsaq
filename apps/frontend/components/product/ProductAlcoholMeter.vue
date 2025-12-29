@@ -24,6 +24,7 @@
 
     <ProductMeterTooltip
       :title="$t('product.mlPerDollar')"
+      :description="$t('product.mlPerDollarTooltip')"
       :value="value"
       :max="max"
       :min-threshold="max / 3"

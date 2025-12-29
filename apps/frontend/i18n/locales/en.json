@@ -37,7 +37,8 @@
     "unselectAll": "Unselect All"
   },
   "product": {
-    "mlPerDollar": "ml/$"
+    "mlPerDollar": "ml/$",
+    "mlPerDollarTooltip": "Higher value = more alcohol for your money"
   },
   "errors": {
     "loading": "Unable to load products"
