@@ -1,49 +1,18 @@
 {
-  "name": "new",
-  "version": "1.0.0",
-  "main": "index.js",
-  "type": "module",
+  "name": "bsaq-monorepo",
+  "private": true,
+  "workspaces": [
+    "apps/*"
+  ],
   "scripts": {
-    "dev": "cross-env PAGE_SIZE=10 DISABLE_CRON=true tsx src/main.ts",
-    "dev:full": "cross-env PAGE_SIZE=500 tsx src/main.ts",
-    "dev:watch": "cross-env PAGE_SIZE=10 DISABLE_CRON=true tsx --watch src/main.ts",
-    "dev:watch:full": "cross-env PAGE_SIZE=500 tsx --watch src/main.ts",
-    "compile": "graphql-codegen -r dotenv/config --config codegen.ts && prisma generate",
-    "verify-db": "tsx src/scripts/verify-db.ts",
-    "watch": "graphql-codegen -w"
-  },
-  "license": "MIT",
-  "dependencies": {
-    "@apollo/client": "^4.0.11",
-    "@prisma/adapter-pg": "^7.2.0",
-    "@prisma/client": "^7.2.0",
-    "ajv": "^8.17.1",
-    "dotenv": "^17.2.3",
-    "fastify": "^5.6.2",
-    "fastify-type-provider-zod": "^6.1.0",
-    "graphql": "^16.12.0",
-    "graphql-request": "^7.4.0",
-    "node-cron": "^4.2.1",
-    "pg": "^8.16.3",
-    "rxjs": "^7.8.2",
-    "zod": "^4.2.1"
+    "build": "turbo run build",
+    "dev": "turbo run dev",
+    "lint": "turbo run lint",
+    "format": "prettier --write \"**/*.{ts,tsx,md}\""
   },
   "devDependencies": {
-    "@eslint/js": "^9.39.2",
-    "@graphql-codegen/cli": "^6.1.0",
-    "@graphql-codegen/client-preset": "^5.2.2",
-    "@types/node": "^25.0.3",
-    "@types/pg": "^8.16.0",
-    "cross-env": "^10.1.0",
-    "eslint": "^9.39.2",
-    "eslint-config-prettier": "^10.1.8",
-    "eslint-plugin-prettier": "^5.5.4",
-    "prettier": "^3.7.4",
-    "prisma": "^7.2.0",
-    "ts-node": "^10.9.2",
-    "ts-node-dev": "^2.0.0",
-    "tsx": "^4.21.0",
-    "typescript": "^5.9.3",
-    "typescript-eslint": "^8.50.1"
-  }
+    "turbo": "^2.3.3",
+    "prettier": "^3.7.4"
+  },
+  "packageManager": "yarn@1.22.19"
 }

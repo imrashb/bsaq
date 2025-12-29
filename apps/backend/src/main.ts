@@ -64,8 +64,9 @@ const start = async () => {
       initCronJobs();
     }
 
-    await fastify.listen({ port: 3000, host: "0.0.0.0" });
-    console.log("Server is running at http://localhost:3000");
+    const port = Number(process.env.PORT) || 3001;
+    await fastify.listen({ port, host: "0.0.0.0" });
+    console.log(`Server is running at http://localhost:${port}`);
 
     if (!process.env.DISABLE_CRON) {
       runStartupJobs().catch((err) => console.error("Startup job failed", err));

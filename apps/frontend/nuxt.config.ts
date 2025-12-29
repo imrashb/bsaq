@@ -1,0 +1,28 @@
+import { defineNuxtConfig } from "nuxt/config";
+import vuetify, { transformAssetUrls } from "vite-plugin-vuetify";
+
+export default defineNuxtConfig({
+  devtools: { enabled: true },
+  build: {
+    transpile: ["vuetify"],
+  },
+  modules: [
+    (_options, nuxt) => {
+      nuxt.hooks.hook("vite:extendConfig", (config) => {
+        // @ts-expect-error
+        config.plugins.push(vuetify({ autoImport: true }));
+      });
+    },
+    "@vueuse/nuxt",
+  ],
+  vite: {
+    vue: {
+      template: {
+        transformAssetUrls,
+      },
+    },
+  },
+  routeRules: {
+    "/api/**": { proxy: "http://localhost:3001/**" },
+  },
+});
