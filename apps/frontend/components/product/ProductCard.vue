@@ -56,10 +56,7 @@
               <strong class="text-white">{{ product.volumeMl }}</strong>
               {{ $t("common.ml") }}
             </div>
-            <div>
-              <strong class="text-white">{{ product.abv.toFixed(1) }}%</strong>
-              {{ $t("common.abv") }}
-            </div>
+            <ProductAbvMeter :value="product.abv" />
           </div>
 
           <v-spacer />
@@ -124,7 +121,7 @@
           class="d-flex justify-space-between text-caption text-medium-emphasis bg-surface-lighten-1 pa-2 rounded"
         >
           <span>{{ product.volumeMl }} {{ $t("common.ml") }}</span>
-          <span>{{ product.abv.toFixed(1) }}% {{ $t("common.abv") }}</span>
+          <ProductAbvMeter :value="product.abv" />
           <span>{{ product.country }}</span>
         </div>
       </v-card-text>
@@ -151,6 +148,7 @@
 import type { Product } from "@bsaq/types";
 import ProductImage from "./ProductImage.vue";
 import ProductAlcoholMeter from "./ProductAlcoholMeter.vue";
+import ProductAbvMeter from "./ProductAbvMeter.vue";
 
 const props = defineProps<{
   product: Product;

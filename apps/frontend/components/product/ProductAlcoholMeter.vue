@@ -21,10 +21,25 @@
         >{{ $t("common.ml") }}/$</span
       >
     </div>
+
+    <ProductMeterTooltip
+      :title="$t('product.mlPerDollar')"
+      :value="value"
+      :max="max"
+      :min-threshold="max / 3"
+      min-label="0"
+      :max-label="`${max.toFixed(0)}`"
+      :value-label="`${value.toFixed(2)} ml/$`"
+      :start-color="METER_COLORS.BAD"
+      :end-color="METER_COLORS.GOOD"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
+import ProductMeterTooltip from "./ProductMeterTooltip.vue";
+import { METER_COLORS } from "~/constants/styling";
+
 const props = defineProps<{
   value: number;
   max: number;
@@ -39,7 +54,7 @@ const color = computed(() => {
   const max = props.max;
   const minThreshold = max / 3;
 
-  if (current < minThreshold) return "#FF5252"; // Red (Error)
+  if (current < minThreshold) return METER_COLORS.BAD;
 
   // Map [minThreshold, max] to hue [30, 120] (Orange -> Green)
   const normalized = (current - minThreshold) / (max - minThreshold);
