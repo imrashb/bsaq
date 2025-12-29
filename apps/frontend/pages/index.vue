@@ -89,34 +89,36 @@ import { useStorage, refDebounced } from "@vueuse/core";
 import ProductGrid from "~/components/product/ProductGrid.vue";
 import ProductToolbar from "~/components/product/ProductToolbar.vue";
 import ProductFilters from "~/components/product/ProductFilters.vue";
-import { ProductSortOptions, type GetProductsResponse } from "@bsaq/types";
+import {
+  ProductSortOptions,
+  type GetProductsResponse,
+  type ProductSortOption,
+} from "@bsaq/types";
+import { useProducts } from "~/composables/api/useProducts";
 
 // State
 const page = ref(1);
 const itemsPerPage = useStorage("bsaq-per-page", 20);
-const viewMode = ref<"grid" | "list">("grid");
-const sortBy = useStorage("bsaq-sort-by", ProductSortOptions.AlcoholDesc);
+const viewMode = useStorage<"grid" | "list">("bsaq-view-mode", "grid");
+const sortBy = useStorage<ProductSortOption>(
+  "bsaq-sort-by",
+  ProductSortOptions.AlcoholDesc
+);
 const search = ref("");
 const searchDebounced = refDebounced(search, 500);
 const selectedCategories = ref<string[]>([]);
 const drawer = ref(true); // Default open on desktop (controlled by permanent prop anyway), will be responsive
 
 // Data Fetching
-const {
-  data: response,
-  pending,
-  error,
-  refresh,
-} = await useFetch<GetProductsResponse>("/api/products", {
-  query: {
-    page,
-    pageSize: itemsPerPage,
-    sort: sortBy,
-    search: searchDebounced,
-    categories: selectedCategories,
-  },
-  watch: [page, itemsPerPage, sortBy, searchDebounced, selectedCategories], // Auto-refetch when these change
-});
+const productsQuery = computed(() => ({
+  page: page.value,
+  pageSize: itemsPerPage.value,
+  sortBy: sortBy.value,
+  search: searchDebounced.value,
+  categories: selectedCategories.value,
+}));
+
+const { data: response, pending, error, refresh } = useProducts(productsQuery);
 
 const products = computed(() => response.value?.data || []);
 const total = computed(() => response.value?.meta?.total || 0);
