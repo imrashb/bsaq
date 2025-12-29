@@ -63,7 +63,7 @@
 
           <v-btn
             color="primary"
-            variant="tonal"
+            variant="flat"
             size="small"
             append-icon="mdi-open-in-new"
             :href="product.url"
@@ -131,7 +131,7 @@
       <v-card-actions>
         <v-btn
           block
-          variant="text"
+          variant="flat"
           color="primary"
           :href="product.url"
           target="_blank"

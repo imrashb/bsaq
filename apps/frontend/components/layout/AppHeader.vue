@@ -1,8 +1,8 @@
 <template>
   <v-app-bar color="background" elevation="1" border>
     <template #prepend>
-      <v-avatar color="primary" class="mr-2" variant="tonal">
-        <v-icon icon="mdi-glass-wine" />
+      <v-avatar class="mr-2" rounded="0" color="transparent">
+        <v-img src="~/assets/logo.png" alt="BSAQ Logo" />
       </v-avatar>
     </template>
 
@@ -18,20 +18,27 @@
     </v-app-bar-title>
 
     <template #append>
-      <div class="d-flex align-center mr-4">
+      <v-btn-toggle
+        :model-value="locale"
+        mandatory
+        color="primary"
+        variant="flat"
+        :rounded="false"
+        divided
+        class="mr-4"
+        density="compact"
+        @update:model-value="setLocale"
+      >
         <v-btn
           v-for="l in typedLocales"
           :key="l.code"
-          :variant="locale === l.code ? 'tonal' : 'text'"
-          :color="locale === l.code ? 'primary' : 'medium-emphasis'"
+          :value="l.code"
           size="small"
-          class="px-2 min-w-0"
           :rounded="false"
-          @click="setLocale(l.code)"
         >
           {{ l.code.toUpperCase() }}
         </v-btn>
-      </div>
+      </v-btn-toggle>
       <v-btn icon color="secondary" variant="text" class="mr-2" disabled>
         <v-icon>mdi-magnify</v-icon>
       </v-btn>

@@ -5,7 +5,7 @@
       class="d-flex flex-column flex-md-row align-start align-md-center justify-space-between gap-4 mb-6"
     >
       <div>
-        <h1 class="text-h3 font-weight-bold text-gradient">
+        <h1 class="text-h3 font-weight-bold">
           {{ $t("home.title") }}
         </h1>
         <p class="text-body-1 text-medium-emphasis" style="max-width: 600px">
@@ -89,11 +89,7 @@ import { useStorage, refDebounced } from "@vueuse/core";
 import ProductGrid from "~/components/product/ProductGrid.vue";
 import ProductToolbar from "~/components/product/ProductToolbar.vue";
 import ProductFilters from "~/components/product/ProductFilters.vue";
-import {
-  ProductSortOptions,
-  type Product,
-  type GetProductsResponse,
-} from "@bsaq/types";
+import { ProductSortOptions, type GetProductsResponse } from "@bsaq/types";
 
 // State
 const page = ref(1);
@@ -143,16 +139,6 @@ watch([itemsPerPage, sortBy, searchDebounced, selectedCategories], () => {
 </script>
 
 <style scoped>
-.text-gradient {
-  background: linear-gradient(
-    135deg,
-    rgb(var(--v-theme-primary)) 0%,
-    rgb(var(--v-theme-secondary)) 100%
-  );
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
 .sticky-top {
   position: sticky;
   z-index: 1;

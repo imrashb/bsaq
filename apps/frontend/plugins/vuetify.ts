@@ -24,8 +24,8 @@ export default defineNuxtPlugin((nuxtApp) => {
           colors: {
             background: "#0f172a", // Slate 900
             surface: "#1e293b", // Slate 800
-            primary: "#8b5cf6", // Violet 500
-            secondary: "#2dd4bf", // Teal 400
+            primary: "#7e003f", // SAQ Main
+            secondary: "#00838e", // SAQ Secondary
             error: "#f43f5e", // Rose 500
             info: "#3b82f6", // Blue 500
             success: "#10b981", // Emerald 500
