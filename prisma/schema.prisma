@@ -1,0 +1,30 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Product {
+  sku                          String   @id
+  name                         String
+  volumeMl                     Int
+  abv                          Float
+  category                     String
+  country                      String
+  isAvailableInStore           Boolean
+  url                          String
+  currentPrice                 Float?
+  originalPrice                Float?
+  pureAlcoholMl                Float?
+  pureAlcoholPerDollar         Float?
+  pureAlcoholPerOriginalDollar Float?
+  
+  createdAt                    DateTime @default(now())
+  updatedAt                    DateTime @updatedAt
+
+  @@index([category])
+  @@index([pureAlcoholPerDollar(sort: Desc)])
+}
