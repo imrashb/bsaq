@@ -4,7 +4,8 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "dev": "cross-env PAGE_SIZE=10 DISABLE_CRON=true tsx --watch src/main.ts",
+    "build": "yarn compile",
+    "dev": "yarn compile && cross-env PAGE_SIZE=10 DISABLE_CRON=true tsx --watch src/main.ts",
     "dev:watch:full": "cross-env PAGE_SIZE=500 tsx --watch src/main.ts",
     "compile": "graphql-codegen -r dotenv/config --config codegen.ts && prisma generate",
     "verify-db": "tsx src/scripts/verify-db.ts",
@@ -24,7 +25,8 @@
     "node-cron": "^4.2.1",
     "pg": "^8.16.3",
     "rxjs": "^7.8.2",
-    "zod": "^4.2.1"
+    "zod": "^4.2.1",
+    "@bsaq/types": "*"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.2",

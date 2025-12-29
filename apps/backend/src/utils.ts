@@ -1,30 +1,15 @@
 import { ResultOf } from "@graphql-typed-document-node/core";
 import { PRODUCTS_QUERY } from "./config.js";
 
+import type { Product, ProductAttributes } from "@bsaq/types";
+
 export type Mapper<T> = {
   name: string;
   key: keyof T;
   transform?: (value: string) => T[keyof T];
 };
 
-export type ProductAttributes = {
-  volumeMl: number;
-  abv: number;
-  category: string;
-  country: string;
-  isAvailableInStore: boolean;
-  name: string;
-};
-
-export type Product = ProductAttributes & {
-  sku: string;
-  url: string;
-  currentPrice: number | null;
-  originalPrice: number | null;
-  pureAlcoholMl: number | null;
-  pureAlcoholPerDollar: number | null;
-  pureAlcoholPerOriginalDollar: number | null;
-};
+export type { Product, ProductAttributes };
 
 export type ProductSearchQuery = ResultOf<typeof PRODUCTS_QUERY>;
 export type ProductSearchItem = NonNullable<

@@ -1,6 +1,6 @@
 import { PrismaPg } from "@prisma/adapter-pg";
 import { Prisma, PrismaClient } from "../generated/prisma/client.js";
-import { Product } from "../utils.js";
+import type { Product } from "@bsaq/types";
 
 export class ProductRepository {
   private prisma: PrismaClient;

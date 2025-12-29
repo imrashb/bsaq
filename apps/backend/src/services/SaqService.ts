@@ -1,10 +1,9 @@
 import { ApolloClient } from "@apollo/client";
 import { config, PRODUCTS_QUERY } from "../config";
 import { SortEnum } from "../gql/graphql";
+import type { Product, ProductAttributes } from "@bsaq/types";
 import {
   Mapper,
-  Product,
-  ProductAttributes,
   ProductSearchItem,
   ProductSearchQuery,
   calculatePureAlcoholMl,
