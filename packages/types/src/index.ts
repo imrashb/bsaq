@@ -10,6 +10,7 @@ export type ProductAttributes = {
 export type Product = ProductAttributes & {
   sku: string;
   url: string;
+  imageUrl: string | null;
   currentPrice: number | null;
   originalPrice: number | null;
   pureAlcoholMl: number | null;

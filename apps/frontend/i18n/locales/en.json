@@ -1,0 +1,30 @@
+{
+  "app": {
+    "title": "BSAQ",
+    "subtitle": "Best Value Alcohol"
+  },
+  "nav": {
+    "search": "Search",
+    "github": "GitHub"
+  },
+  "home": {
+    "title": "Find Your Deal",
+    "subtitle": "Browsing the best value alcohol at the SAQ, sorted by pure alcohol per dollar."
+  },
+  "common": {
+    "view": "View",
+    "perPage": "Per Page",
+    "retry": "Retry",
+    "viewDetails": "View Details",
+    "viewAtSaq": "View at SAQ",
+    "volume": "Volume",
+    "abv": "ABV",
+    "noImage": "No Image"
+  },
+  "product": {
+    "mlPerDollar": "ml/$"
+  },
+  "errors": {
+    "loading": "Unable to load products"
+  }
+}

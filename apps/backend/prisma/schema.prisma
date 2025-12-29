@@ -16,6 +16,7 @@ model Product {
   country                      String
   isAvailableInStore           Boolean
   url                          String
+  imageUrl                     String?
   currentPrice                 Float?
   originalPrice                Float?
   pureAlcoholMl                Float?

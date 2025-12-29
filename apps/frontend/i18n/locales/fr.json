@@ -1,0 +1,30 @@
+{
+  "app": {
+    "title": "BSAQ",
+    "subtitle": "Meilleur alcool pour votre argent"
+  },
+  "nav": {
+    "search": "Rechercher",
+    "github": "GitHub"
+  },
+  "home": {
+    "title": "Trouvez votre aubaine",
+    "subtitle": "Parcourir les meilleurs alcools de la SAQ, triés par alcool pur par dollar."
+  },
+  "common": {
+    "view": "Vue",
+    "perPage": "Par page",
+    "retry": "Réessayer",
+    "viewDetails": "Voir détails",
+    "viewAtSaq": "Voir sur SAQ",
+    "volume": "Volume",
+    "abv": "ABV",
+    "noImage": "Aucune image"
+  },
+  "product": {
+    "mlPerDollar": "ml/$"
+  },
+  "errors": {
+    "loading": "Impossible de charger les produits"
+  }
+}

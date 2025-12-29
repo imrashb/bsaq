@@ -46,3 +46,16 @@ export const extractSku = (item: ProductSearchItem) => {
 export const extractUrl = (item: ProductSearchItem) => {
   return item.productView?.url;
 };
+
+export const extractImageUrl = (item: ProductSearchItem) => {
+  return (
+    item.product?.small_image?.url ||
+    item.product?.thumbnail?.url ||
+    item.productView?.images?.find(
+      (img) =>
+        img?.roles?.includes("small_image") ||
+        img?.roles?.includes("thumbnail"),
+    )?.url ||
+    item.productView?.images?.[0]?.url
+  );
+};

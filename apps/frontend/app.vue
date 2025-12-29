@@ -1,19 +1,19 @@
+<script setup lang="ts">
+import AppHeader from "./components/layout/AppHeader.vue";
+</script>
+
 <template>
   <v-app>
-    <v-app-bar color="primary" density="compact">
-      <v-app-bar-title>BSAQ - Best Value Alcohol</v-app-bar-title>
-      <v-spacer></v-spacer>
-      <v-btn icon>
-        <v-icon>mdi-magnify</v-icon>
-      </v-btn>
-    </v-app-bar>
+    <AppHeader />
 
-    <v-main>
+    <v-main class="bg-background">
       <NuxtPage />
     </v-main>
   </v-app>
 </template>
 
-<script setup lang="ts">
-  // App level logic
-</script>
+<style>
+body {
+  font-family: "Outfit", sans-serif !important;
+}
+</style>
