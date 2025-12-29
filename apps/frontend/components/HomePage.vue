@@ -5,7 +5,7 @@
       class="d-flex flex-column flex-md-row align-start align-md-center justify-space-between gap-4 mb-6"
     >
       <div>
-        <h1 class="text-h3 font-weight-bold">
+        <h1 class="text-h5 text-md-h3 font-weight-bold">
           {{ $t("home.title") }}
         </h1>
         <p class="text-body-1 text-medium-emphasis" style="max-width: 600px">
