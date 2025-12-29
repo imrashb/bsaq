@@ -30,7 +30,7 @@
       <v-checkbox
         v-for="facet in filteredFacets"
         :key="facet.category"
-        v-model="model"
+        v-model="categories"
         :value="facet.category"
         density="compact"
         hide-details
@@ -42,7 +42,7 @@
             <span
               class="text-body-2 text-truncate mr-2"
               :class="{
-                'font-weight-medium text-high-emphasis': model.includes(
+                'font-weight-medium text-high-emphasis': categories.includes(
                   facet.category
                 ),
               }"
@@ -73,31 +73,21 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch, computed } from "vue";
-import { useDebounceFn } from "@vueuse/core";
+import { ref, computed } from "vue";
 import type { Facet } from "@bsaq/types";
+import { useInjectFilters } from "~/composables/useFilters";
 
 const props = defineProps<{
   facets: Facet[];
 }>();
 
-const model = defineModel<string[]>({ default: [] });
+const { categories } = useInjectFilters();
 
 const searchQuery = ref("");
-const debouncedSearch = ref("");
-
-// Debounce the update of the search term used for filtering
-const updateDebouncedSearch = useDebounceFn((val: string) => {
-  debouncedSearch.value = val;
-}, 300);
-
-watch(searchQuery, (val) => {
-  updateDebouncedSearch(val);
-});
 
 const filteredFacets = computed(() => {
-  if (!debouncedSearch.value) return props.facets;
-  const q = debouncedSearch.value.toLowerCase();
+  if (!searchQuery.value) return props.facets;
+  const q = searchQuery.value.toLowerCase();
   return props.facets.filter((f) => f.category.toLowerCase().includes(q));
 });
 
@@ -105,17 +95,19 @@ const isAllSelected = computed(() => {
   if (filteredFacets.value.length === 0) return false;
 
   const filteredCategories = filteredFacets.value.map((f) => f.category);
-  return filteredCategories.every((c) => model.value.includes(c));
+  return filteredCategories.every((c) => categories.value.includes(c));
 });
 
 const toggleAll = () => {
   if (isAllSelected.value) {
     const filteredCategories = filteredFacets.value.map((f) => f.category);
-    model.value = model.value.filter((c) => !filteredCategories.includes(c));
+    categories.value = categories.value.filter(
+      (c) => !filteredCategories.includes(c)
+    );
   } else {
     const filteredCategories = filteredFacets.value.map((f) => f.category);
-    const newSelection = new Set([...model.value, ...filteredCategories]);
-    model.value = Array.from(newSelection);
+    const newSelection = new Set([...categories.value, ...filteredCategories]);
+    categories.value = Array.from(newSelection);
   }
 };
 </script>

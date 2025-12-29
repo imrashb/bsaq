@@ -23,7 +23,7 @@
     <div class="d-flex align-center ga-2 flex-1-0">
       <!-- Search/Filter (Placeholder for now) -->
       <v-text-field
-        v-model="internalSearch"
+        v-model="search"
         :label="$t('common.search')"
         prepend-inner-icon="mdi-magnify"
         variant="outlined"
@@ -36,7 +36,7 @@
 
       <!-- Sort Dropdown -->
       <v-select
-        v-model="internalSort"
+        v-model="sortBy"
         :items="sortOptions"
         :label="$t('common.sort')"
         item-title="title"
@@ -48,10 +48,10 @@
       />
 
       <v-divider vertical class="mx-2" />
-      <ViewToggle v-model="internalViewMode" />
+      <ViewToggle v-model="viewMode" />
       <v-divider vertical class="mx-2" />
       <v-select
-        v-model="internalItemsPerPage"
+        v-model="itemsPerPage"
         :items="[10, 20, 50, 100]"
         :label="$t('common.perPage')"
         hide-details
@@ -67,43 +67,19 @@
 <script setup lang="ts">
 import ViewToggle from "~/components/common/ViewToggle.vue";
 import { ProductSortOptions } from "@bsaq/types";
+import { useInjectFilters } from "~/composables/useFilters";
 
 const props = defineProps<{
   total: number;
-  viewMode: "grid" | "list";
-  itemsPerPage: number;
-  sortBy: string;
-  search: string;
 }>();
 
 const emit = defineEmits<{
-  (e: "update:viewMode", value: "grid" | "list"): void;
-  (e: "update:itemsPerPage", value: number): void;
-  (e: "update:sortBy", value: string): void;
-  (e: "update:search", value: string): void;
   (e: "toggle-filters"): void;
 }>();
 
-// Internal state proxies
-const internalViewMode = computed({
-  get: () => props.viewMode,
-  set: (val) => emit("update:viewMode", val),
-});
+const viewMode = defineModel<"grid" | "list">("viewMode", { required: true });
 
-const internalItemsPerPage = computed({
-  get: () => props.itemsPerPage,
-  set: (val) => emit("update:itemsPerPage", val),
-});
-
-const internalSort = computed({
-  get: () => props.sortBy,
-  set: (val) => emit("update:sortBy", val),
-});
-
-const internalSearch = computed({
-  get: () => props.search,
-  set: (val) => emit("update:search", val),
-});
+const { search, sortBy, itemsPerPage } = useInjectFilters();
 
 const { t } = useI18n();
 

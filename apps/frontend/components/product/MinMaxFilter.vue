@@ -2,8 +2,8 @@
   <div>
     <div class="d-flex align-center ga-2">
       <v-text-field
-        :model-value="min"
-        @update:model-value="(val) => (min = Number(val))"
+        :model-value="model[0]"
+        @update:model-value="(val) => (model = [Number(val), model[1]])"
         class="flex-1-1"
         type="number"
         density="compact"
@@ -15,8 +15,8 @@
       ></v-text-field>
       <span class="text-medium-emphasis">-</span>
       <v-text-field
-        :model-value="max"
-        @update:model-value="(val) => (max = Number(val))"
+        :model-value="model[1]"
+        @update:model-value="(val) => (model = [model[0], Number(val)])"
         class="flex-1-1"
         type="number"
         density="compact"
@@ -31,11 +31,17 @@
 </template>
 
 <script setup lang="ts">
-const min = defineModel<number>("min");
-const max = defineModel<number>("max");
+import {
+  type RangeFilterKeys,
+  useInjectFilters,
+} from "~/composables/useFilters";
 
-defineProps<{
+const props = defineProps<{
+  filterId: RangeFilterKeys;
   prefix?: string;
   suffix?: string;
 }>();
+
+const filterState = useInjectFilters();
+const model = filterState[props.filterId];
 </script>

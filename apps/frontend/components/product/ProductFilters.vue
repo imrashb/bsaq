@@ -43,18 +43,11 @@ import { useI18n } from "vue-i18n";
 import type { Facet } from "@bsaq/types";
 import MinMaxFilter from "./MinMaxFilter.vue";
 import CategoryFilter from "./CategoryFilter.vue";
+import type { RangeFilterKeys } from "~/composables/useFilters";
 
 const props = defineProps<{
   facets: Facet[];
 }>();
-
-const model = defineModel<string[]>({ default: [] });
-const priceRange = defineModel<[number, number]>("priceRange", {
-  default: [0, 200],
-});
-const abvRange = defineModel<[number, number]>("abvRange", {
-  default: [0, 100],
-});
 
 const emit = defineEmits<{
   (e: "close"): void;
@@ -66,7 +59,10 @@ interface FilterSection {
   id: string;
   title: string;
   component: any;
-  props: any;
+  props: {
+    filterId?: RangeFilterKeys;
+    [key: string]: any;
+  };
   contentClass?: string;
   containerClass?: string;
 }
@@ -77,12 +73,7 @@ const sections = computed<FilterSection[]>(() => [
     title: t("common.price"),
     component: MinMaxFilter,
     props: {
-      min: priceRange.value[0],
-      max: priceRange.value[1],
-      "onUpdate:min": (v?: number) =>
-        (priceRange.value = [v ?? 0, priceRange.value[1]]),
-      "onUpdate:max": (v?: number) =>
-        (priceRange.value = [priceRange.value[0], v ?? 200]),
+      filterId: "price",
       prefix: "$",
     },
   },
@@ -91,12 +82,7 @@ const sections = computed<FilterSection[]>(() => [
     title: `${t("common.abv")} (%)`,
     component: MinMaxFilter,
     props: {
-      min: abvRange.value[0],
-      max: abvRange.value[1],
-      "onUpdate:min": (v?: number) =>
-        (abvRange.value = [v ?? 0, abvRange.value[1]]),
-      "onUpdate:max": (v?: number) =>
-        (abvRange.value = [abvRange.value[0], v ?? 100]),
+      filterId: "abv",
       suffix: "%",
     },
   },
@@ -106,11 +92,7 @@ const sections = computed<FilterSection[]>(() => [
     component: CategoryFilter,
     props: {
       facets: props.facets,
-      modelValue: model.value,
-      "onUpdate:modelValue": (v: string[]) => (model.value = v),
     },
   },
 ]);
 </script>
-
-<style scoped></style>
