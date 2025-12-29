@@ -1,9 +1,6 @@
 <template>
   <div>
-    <div class="text-subtitle-2 font-weight-bold mb-2">
-      {{ label }}
-    </div>
-    <div class="d-flex align-center ga-2 mb-4">
+    <div class="d-flex align-center ga-2">
       <v-text-field
         :model-value="min"
         @update:model-value="(val) => (min = Number(val))"
@@ -38,7 +35,6 @@ const min = defineModel<number>("min");
 const max = defineModel<number>("max");
 
 defineProps<{
-  label: string;
   prefix?: string;
   suffix?: string;
 }>();

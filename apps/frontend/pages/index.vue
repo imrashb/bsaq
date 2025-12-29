@@ -20,7 +20,7 @@
       :temporary="!$vuetify.display.mdAndUp"
       width="300"
       location="left"
-      class="border-thin"
+      class="border-thin product-filters-drawer"
     >
       <ProductFilters
         :facets="facets"
@@ -157,5 +157,24 @@ watch(
 .sticky-top {
   position: sticky;
   z-index: 1;
+}
+
+/* Custom scrollbar for better look in small areas */
+.product-filters-drawer
+  :deep(.v-navigation-drawer__content::-webkit-scrollbar) {
+  width: 6px;
+}
+.product-filters-drawer
+  :deep(.v-navigation-drawer__content::-webkit-scrollbar-track) {
+  background: transparent;
+}
+.product-filters-drawer
+  :deep(.v-navigation-drawer__content::-webkit-scrollbar-thumb) {
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 3px;
+}
+.product-filters-drawer
+  :deep(.v-navigation-drawer__content::-webkit-scrollbar-thumb:hover) {
+  background-color: rgba(255, 255, 255, 0.2);
 }
 </style>
