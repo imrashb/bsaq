@@ -1,7 +1,8 @@
 {
   "app": {
     "title": "BSAQ",
-    "subtitle": "The SAQ for the BS"
+    "subtitle": "The SAQ for the BS",
+    "subtitle_safe": "The SAQ on a budget"
   },
   "nav": {
     "search": "Search",

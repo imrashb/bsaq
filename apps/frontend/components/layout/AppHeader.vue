@@ -11,13 +11,28 @@
         <span class="font-weight-bold text-h5 text-white">
           {{ $t("app.title") }}
         </span>
-        <span class="text-caption text-medium-emphasis">{{
-          $t("app.subtitle")
-        }}</span>
+        <v-fade-transition mode="out-in">
+          <span
+            :key="snowflakeMode ? 'safe' : 'unsafe'"
+            class="text-caption text-medium-emphasis"
+          >
+            {{ snowflakeMode ? $t("app.subtitle_safe") : $t("app.subtitle") }}
+          </span>
+        </v-fade-transition>
       </div>
     </v-app-bar-title>
 
     <template #append>
+      <v-btn
+        icon
+        size="small"
+        :color="snowflakeMode ? 'info' : 'grey'"
+        variant="text"
+        class="mr-2"
+        @click="snowflakeMode = !snowflakeMode"
+      >
+        <v-icon>mdi-snowflake</v-icon>
+      </v-btn>
       <v-btn-toggle
         :model-value="locale"
         mandatory
@@ -50,7 +65,9 @@
 </template>
 
 <script setup lang="ts">
+import { useI18n } from "vue-i18n";
 const { locale, locales, setLocale } = useI18n();
+const snowflakeMode = useSnowflakeMode();
 
 // Cast locales to specific type for template usage to avoid TS errors
 const typedLocales = computed(() => {
