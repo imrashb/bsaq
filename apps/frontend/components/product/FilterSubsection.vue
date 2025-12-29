@@ -23,11 +23,11 @@
 </template>
 
 <script setup lang="ts">
-import { useInjectFilters, type FilterState } from "~/composables/useFilters";
+import { useInjectFilters, type FilterValues } from "~/composables/useFilters";
 
 defineProps<{
   title: string;
-  filterKey?: keyof FilterState;
+  filterKey?: keyof FilterValues;
 }>();
 
 const { isDefault, resetFilter } = useInjectFilters();
