@@ -1,7 +1,7 @@
 <template>
   <div>
     <!-- Grid View -->
-    <v-row v-if="!isList">
+    <v-row v-if="viewMode === 'grid'">
       <v-col
         v-for="product in products"
         :key="product.sku"
@@ -14,6 +14,7 @@
         <ProductCard
           :product="product"
           :is-list="false"
+          :max-pure-alcohol-per-dollar="maxPureAlcoholPerDollar"
         />
       </v-col>
     </v-row>
@@ -31,6 +32,7 @@
         <ProductCard
           :product="product"
           :is-list="true"
+          :max-pure-alcohol-per-dollar="maxPureAlcoholPerDollar"
         />
       </v-col>
     </v-row>
@@ -43,6 +45,7 @@ import ProductCard from "./ProductCard.vue";
 
 defineProps<{
   products: Product[];
-  isList: boolean;
+  viewMode: "grid" | "list";
+  maxPureAlcoholPerDollar?: number;
 }>();
 </script>

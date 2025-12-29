@@ -1,9 +1,22 @@
 <template>
-  <v-toolbar color="surface" class="rounded-lg elevation-1">
-    <!-- Results Count -->
-    <div class="text-subtitle-1 font-weight-medium text-medium-emphasis ml-2">
+  <v-toolbar color="surface" class="rounded-lg elevation-1 pr-2">
+    <!-- Results Count (hidden on very small screens if needed, but keeping for now) -->
+    <div
+      class="text-subtitle-1 font-weight-medium text-medium-emphasis ml-4 d-none d-sm-block"
+    >
       {{ $t("home.results", { count: total }) }}
     </div>
+
+    <!-- Mobile Filter Toggle -->
+    <v-btn
+      prepend-icon="mdi-filter-variant"
+      variant="text"
+      color="primary"
+      class="d-md-none ml-2"
+      @click="$emit('toggle-filters')"
+    >
+      {{ $t("common.filter") }}
+    </v-btn>
 
     <v-spacer />
 
@@ -67,6 +80,7 @@ const emit = defineEmits<{
   (e: "update:itemsPerPage", value: number): void;
   (e: "update:sortBy", value: string): void;
   (e: "update:search", value: string): void;
+  (e: "toggle-filters"): void;
 }>();
 
 // Internal state proxies

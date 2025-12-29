@@ -1,8 +1,8 @@
 <template>
-  <v-container class="py-8 d-flex flex-column gap-4">
+  <v-container fluid class="pa-6">
     <!-- Header Section -->
     <div
-      class="d-flex flex-column flex-md-row align-start align-md-center justify-space-between gap-4"
+      class="d-flex flex-column flex-md-row align-start align-md-center justify-space-between gap-4 mb-6"
     >
       <div>
         <h1 class="text-h3 font-weight-bold text-gradient">
@@ -14,92 +14,82 @@
       </div>
     </div>
 
-    <!-- Toolbar Section -->
-    <ProductToolbar
-      v-model:view-mode="viewMode"
-      v-model:items-per-page="itemsPerPage"
-      v-model:sort-by="sortBy"
-      v-model:search="search"
-      :total="total"
-    />
+    <v-navigation-drawer
+      v-model="drawer"
+      :permanent="$vuetify.display.mdAndUp"
+      :temporary="!$vuetify.display.mdAndUp"
+      width="300"
+      location="left"
+      class="border-thin"
+    >
+      <ProductFilters
+        :facets="facets"
+        v-model="selectedCategories"
+        @close="drawer = false"
+      />
+    </v-navigation-drawer>
 
-    <!-- Content Section -->
-    <v-fade-transition mode="out-in">
-      <!-- Loading State -->
-      <v-row v-if="pending" key="loading">
-        <v-col
-          v-for="n in itemsPerPage"
-          :key="n"
-          cols="12"
-          :sm="viewMode === 'grid' ? 6 : 12"
-          :md="viewMode === 'grid' ? 4 : 8"
-          :lg="viewMode === 'grid' ? 3 : 6"
-          :class="{ 'mx-auto': viewMode === 'list' }"
-        >
-          <v-skeleton-loader
-            :type="
-              viewMode === 'grid'
-                ? 'card, article'
-                : 'list-item-avatar-three-line'
-            "
+    <v-row>
+      <!-- Main Content -->
+      <v-col cols="12">
+        <!-- Toolbar -->
+        <div class="mb-4">
+          <ProductToolbar
+            v-model:viewMode="viewMode"
+            v-model:itemsPerPage="itemsPerPage"
+            v-model:sortBy="sortBy"
+            v-model:search="search"
+            :total="total"
+            @toggle-filters="drawer = !drawer"
           />
-        </v-col>
-      </v-row>
+        </div>
 
-      <!-- Error State -->
-      <v-alert
-        v-else-if="error"
-        key="error"
-        type="error"
-        variant="tonal"
-        border="start"
-        class="mb-5"
-      >
-        <template #title>
-          {{ $t("errors.loading") }}
-        </template>
-        {{ error.message }}
-        <template #append>
-          <v-btn
-            color="error"
-            variant="outlined"
-            size="small"
-            @click="refresh()"
-          >
-            {{ $t("common.retry") }}
-          </v-btn>
-        </template>
-      </v-alert>
-
-      <!-- Products State -->
-      <div v-else key="content" class="d-flex flex-column gap-4">
+        <!-- Product Grid -->
         <ProductGrid
+          v-if="!pending && !error"
           :products="products"
-          :is-list="viewMode === 'list'"
+          :view-mode="viewMode"
           :max-pure-alcohol-per-dollar="maxPureAlcoholPerDollar"
         />
 
+        <!-- Loading / Error States -->
+        <div
+          v-else-if="pending"
+          class="d-flex justify-center align-center py-12"
+        >
+          <v-progress-circular indeterminate color="primary" size="64" />
+        </div>
+
+        <div v-else class="text-center py-12">
+          <v-icon size="64" color="error" class="mb-4">mdi-alert-circle</v-icon>
+          <div class="text-h6 text-error">
+            {{ $t("home.error") }}
+          </div>
+          <v-btn color="primary" variant="text" class="mt-2" @click="refresh">
+            {{ $t("common.retry") }}
+          </v-btn>
+        </div>
+
         <!-- Pagination -->
-        <v-pagination
-          v-if="total > 0"
-          v-model="page"
-          :length="totalPages"
-          :total-visible="7"
-          color="primary"
-          rounded="circle"
-          elevation="2"
-        />
-      </div>
-    </v-fade-transition>
+        <div class="mt-6 d-flex justify-center">
+          <v-pagination
+            v-model="page"
+            :length="totalPages"
+            :total-visible="7"
+            rounded="circle"
+          ></v-pagination>
+        </div>
+      </v-col>
+    </v-row>
   </v-container>
 </template>
 
 <script setup lang="ts">
-import type { Product } from "@bsaq/types";
-import { useStorage } from "@vueuse/core";
-import ViewToggle from "~/components/common/ViewToggle.vue";
+import { useStorage, refDebounced } from "@vueuse/core";
 import ProductGrid from "~/components/product/ProductGrid.vue";
 import ProductToolbar from "~/components/product/ProductToolbar.vue";
+import ProductFilters from "~/components/product/ProductFilters.vue";
+import type { Product } from "@bsaq/types";
 
 // State
 const page = ref(1);
@@ -108,6 +98,8 @@ const viewMode = ref<"grid" | "list">("grid");
 const sortBy = useStorage("bsaq-sort-by", "alcohol_desc");
 const search = ref("");
 const searchDebounced = refDebounced(search, 500);
+const selectedCategories = ref<string[]>([]);
+const drawer = ref(true); // Default open on desktop (controlled by permanent prop anyway), will be responsive
 
 // Data Fetching
 const {
@@ -117,15 +109,20 @@ const {
   refresh,
 } = await useFetch<{
   data: Product[];
-  meta: { total: number; maxPureAlcoholPerDollar: number };
+  meta: {
+    total: number;
+    maxPureAlcoholPerDollar: number;
+    facets: { category: string; count: number }[];
+  };
 }>("/api/products", {
   query: {
     page,
     pageSize: itemsPerPage,
     sort: sortBy,
     search: searchDebounced,
+    categories: selectedCategories,
   },
-  watch: [page, itemsPerPage, sortBy, searchDebounced], // Auto-refetch when these change
+  watch: [page, itemsPerPage, sortBy, searchDebounced, selectedCategories], // Auto-refetch when these change
 });
 
 const products = computed(() => response.value?.data || []);
@@ -133,6 +130,8 @@ const total = computed(() => response.value?.meta?.total || 0);
 const maxPureAlcoholPerDollar = computed(
   () => response.value?.meta?.maxPureAlcoholPerDollar || 15
 );
+const facets = computed(() => response.value?.meta?.facets || []);
+
 const totalPages = computed(() => Math.ceil(total.value / itemsPerPage.value));
 
 // Scroll to top on page change
@@ -141,7 +140,7 @@ watch(page, () => {
 });
 
 // Reset page when filters change
-watch([itemsPerPage, sortBy, searchDebounced], () => {
+watch([itemsPerPage, sortBy, searchDebounced, selectedCategories], () => {
   page.value = 1;
 });
 </script>
@@ -157,15 +156,8 @@ watch([itemsPerPage, sortBy, searchDebounced], () => {
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
-.bg-surface-lighten-1 {
-  background-color: rgb(var(--v-theme-surface));
-}
-.gap-4 {
-  gap: 16px;
-}
-:deep(.nav-select .v-field__input) {
-  padding-top: 0;
-  padding-bottom: 0;
-  min-height: 32px;
+.sticky-top {
+  position: sticky;
+  z-index: 1;
 }
 </style>

@@ -23,6 +23,7 @@ const QuerySchema = z.object({
   pageSize: z.coerce.number().min(1).max(100).default(10),
   sort: z.string().optional(),
   search: z.string().optional(),
+  categories: z.union([z.string(), z.array(z.string())]).optional(),
 });
 
 fastify.withTypeProvider<ZodTypeProvider>().get(
@@ -33,7 +34,20 @@ fastify.withTypeProvider<ZodTypeProvider>().get(
     },
   },
   async (request, reply) => {
-    const { page, pageSize, sort, search } = request.query;
+    const {
+      page,
+      pageSize,
+      sort,
+      search,
+      categories: rawCategories,
+    } = request.query;
+
+    let categories: string[] | undefined;
+    if (Array.isArray(rawCategories)) {
+      categories = rawCategories;
+    } else if (typeof rawCategories === "string") {
+      categories = rawCategories.split(",");
+    }
 
     try {
       const products = await repo.findAll({
@@ -41,11 +55,13 @@ fastify.withTypeProvider<ZodTypeProvider>().get(
         pageSize,
         sort,
         search,
+        categories,
       });
 
       // Quick count for meta (optional, but good for pagination)
-      const total = await repo.count(search);
+      const total = await repo.count(search, categories);
       const maxPureAlcoholPerDollar = await repo.getMaxPureAlcoholPerDollar();
+      const facets = await repo.getFacets(search);
 
       return {
         data: products,
@@ -54,6 +70,7 @@ fastify.withTypeProvider<ZodTypeProvider>().get(
           pageSize,
           total,
           maxPureAlcoholPerDollar,
+          facets,
         },
       };
     } catch (err) {

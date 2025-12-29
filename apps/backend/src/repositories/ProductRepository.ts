@@ -59,8 +59,9 @@ export class ProductRepository {
     pageSize: number;
     sort?: string;
     search?: string;
+    categories?: string[];
   }): Promise<Product[]> {
-    const { page, pageSize, sort, search } = options;
+    const { page, pageSize, sort, search, categories } = options;
     const skip = (page - 1) * pageSize;
 
     let orderBy: Prisma.ProductOrderByWithRelationInput = {
@@ -75,6 +76,10 @@ export class ProductRepository {
         { category: { contains: search, mode: "insensitive" } },
         { country: { contains: search, mode: "insensitive" } },
       ];
+    }
+
+    if (categories && categories.length > 0) {
+      where.category = { in: categories };
     }
 
     switch (sort) {
@@ -100,7 +105,7 @@ export class ProductRepository {
     });
   }
 
-  async count(search?: string): Promise<number> {
+  async count(search?: string, categories?: string[]): Promise<number> {
     const where: Prisma.ProductWhereInput = {};
     if (search) {
       where.OR = [
@@ -109,7 +114,44 @@ export class ProductRepository {
         { country: { contains: search, mode: "insensitive" } },
       ];
     }
+    if (categories && categories.length > 0) {
+      where.category = { in: categories };
+    }
     return this.prisma.product.count({ where });
+  }
+
+  async getFacets(
+    search?: string,
+  ): Promise<{ category: string; count: number }[]> {
+    const where: Prisma.ProductWhereInput = {};
+
+    // Facets should be filtered by the search query to show relevant categories,
+    // but usually NOT by the selected categories (so you can see other options).
+    if (search) {
+      where.OR = [
+        { name: { contains: search, mode: "insensitive" } },
+        { category: { contains: search, mode: "insensitive" } },
+        { country: { contains: search, mode: "insensitive" } },
+      ];
+    }
+
+    const facets = await this.prisma.product.groupBy({
+      by: ["category"],
+      where,
+      _count: {
+        category: true,
+      },
+      orderBy: {
+        _count: {
+          category: "desc",
+        },
+      },
+    });
+
+    return facets.map((f) => ({
+      category: f.category,
+      count: f._count.category,
+    }));
   }
 
   async getMaxPureAlcoholPerDollar(): Promise<number> {

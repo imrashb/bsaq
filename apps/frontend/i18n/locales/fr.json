@@ -29,7 +29,11 @@
     "viewAtSaq": "Voir à la SAQ",
     "ml": "ml",
     "abv": "ABV",
-    "noImage": "Aucune image"
+    "noImage": "Aucune image",
+    "categories": "Catégories",
+    "noCategories": "Aucune catégorie trouvée",
+    "selectAll": "Tout sélectionner",
+    "unselectAll": "Tout désélectionner"
   },
   "product": {
     "mlPerDollar": "ml/$"

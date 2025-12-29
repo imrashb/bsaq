@@ -1,6 +1,6 @@
 <template>
   <div
-    class="d-flex align-center justify-center rounded px-2 py-0 font-weight-bold ml-1"
+    class="d-flex align-center justify-center rounded px-2 py-0 font-weight-bold ml-1 text-center"
     :style="{
       backgroundColor: backgroundColor,
       color: textColor,
