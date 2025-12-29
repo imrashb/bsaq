@@ -89,13 +89,17 @@ import { useStorage, refDebounced } from "@vueuse/core";
 import ProductGrid from "~/components/product/ProductGrid.vue";
 import ProductToolbar from "~/components/product/ProductToolbar.vue";
 import ProductFilters from "~/components/product/ProductFilters.vue";
-import type { Product } from "@bsaq/types";
+import {
+  ProductSortOptions,
+  type Product,
+  type GetProductsResponse,
+} from "@bsaq/types";
 
 // State
 const page = ref(1);
 const itemsPerPage = useStorage("bsaq-per-page", 20);
 const viewMode = ref<"grid" | "list">("grid");
-const sortBy = useStorage("bsaq-sort-by", "alcohol_desc");
+const sortBy = useStorage("bsaq-sort-by", ProductSortOptions.AlcoholDesc);
 const search = ref("");
 const searchDebounced = refDebounced(search, 500);
 const selectedCategories = ref<string[]>([]);
@@ -107,14 +111,7 @@ const {
   pending,
   error,
   refresh,
-} = await useFetch<{
-  data: Product[];
-  meta: {
-    total: number;
-    maxPureAlcoholPerDollar: number;
-    facets: { category: string; count: number }[];
-  };
-}>("/api/products", {
+} = await useFetch<GetProductsResponse>("/api/products", {
   query: {
     page,
     pageSize: itemsPerPage,

@@ -66,6 +66,7 @@
 
 <script setup lang="ts">
 import ViewToggle from "~/components/common/ViewToggle.vue";
+import { ProductSortOptions } from "@bsaq/types";
 
 const props = defineProps<{
   total: number;
@@ -109,14 +110,14 @@ const { t } = useI18n();
 const sortOptions = computed(() => [
   {
     title: t("common.sortBy.alcohol_desc"),
-    value: "alcohol_desc", // Using string literals as previously seen work or if import was issue
+    value: ProductSortOptions.AlcoholDesc,
   },
   {
     title: t("common.sortBy.alcohol_asc"),
-    value: "alcohol_asc",
+    value: ProductSortOptions.AlcoholAsc,
   },
-  { title: t("common.sortBy.price_asc"), value: "price_asc" },
-  { title: t("common.sortBy.price_desc"), value: "price_desc" },
+  { title: t("common.sortBy.price_asc"), value: ProductSortOptions.PriceAsc },
+  { title: t("common.sortBy.price_desc"), value: ProductSortOptions.PriceDesc },
 ]);
 </script>
 

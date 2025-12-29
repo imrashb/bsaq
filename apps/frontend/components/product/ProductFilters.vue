@@ -90,9 +90,10 @@
 <script setup lang="ts">
 import { ref, watch, computed } from "vue";
 import { useDebounceFn } from "@vueuse/core";
+import type { Facet } from "@bsaq/types";
 
 const props = defineProps<{
-  facets: { category: string; count: number }[];
+  facets: Facet[];
   modelValue: string[];
 }>();
 

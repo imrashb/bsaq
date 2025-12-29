@@ -1,6 +1,6 @@
 import { PrismaPg } from "@prisma/adapter-pg";
 import { Prisma, PrismaClient } from "../generated/prisma/client.js";
-import type { Product } from "@bsaq/types";
+import { ProductSortOptions, type Product, type Facet } from "@bsaq/types";
 
 export class ProductRepository {
   private prisma: PrismaClient;
@@ -83,16 +83,16 @@ export class ProductRepository {
     }
 
     switch (sort) {
-      case "price_asc":
+      case ProductSortOptions.PriceAsc:
         orderBy = { currentPrice: "asc" };
         break;
-      case "price_desc":
+      case ProductSortOptions.PriceDesc:
         orderBy = { currentPrice: "desc" };
         break;
-      case "alcohol_asc":
+      case ProductSortOptions.AlcoholAsc:
         orderBy = { pureAlcoholPerDollar: "asc" };
         break;
-      case "alcohol_desc":
+      case ProductSortOptions.AlcoholDesc:
         orderBy = { pureAlcoholPerDollar: "desc" };
         break;
     }
@@ -120,9 +120,7 @@ export class ProductRepository {
     return this.prisma.product.count({ where });
   }
 
-  async getFacets(
-    search?: string,
-  ): Promise<{ category: string; count: number }[]> {
+  async getFacets(search?: string): Promise<Facet[]> {
     const where: Prisma.ProductWhereInput = {};
 
     // Facets should be filtered by the search query to show relevant categories,

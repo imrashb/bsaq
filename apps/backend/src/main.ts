@@ -8,6 +8,7 @@ import {
 } from "fastify-type-provider-zod";
 import { ProductRepository } from "./repositories/ProductRepository.js";
 import { initCronJobs, runStartupJobs } from "./jobs/index.js";
+import { GetProductsResponse } from "@bsaq/types";
 
 const fastify = Fastify({
   logger: true,
@@ -33,7 +34,7 @@ fastify.withTypeProvider<ZodTypeProvider>().get(
       querystring: QuerySchema,
     },
   },
-  async (request, reply) => {
+  async (request, reply): Promise<GetProductsResponse | undefined> => {
     const {
       page,
       pageSize,
