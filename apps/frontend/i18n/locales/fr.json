@@ -18,6 +18,7 @@
   },
   "common": {
     "sort": "Trier par",
+    "reset": "Réinitialiser",
     "sortBy": {
       "price_asc": "Prix: Bas à Élevé",
       "price_desc": "Prix: Élevé à Bas",

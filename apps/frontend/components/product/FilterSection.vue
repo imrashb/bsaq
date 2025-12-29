@@ -5,26 +5,20 @@
     default-expanded
   >
     <div class="d-flex flex-column ga-4">
-      <div>
-        <div class="text-subtitle-2 font-weight-medium mb-2">
-          {{ $t("common.price") }}
-        </div>
+      <FilterSubsection :title="$t('common.price')" filter-key="price">
         <MinMaxFilter filterId="price" prefix="$" />
-      </div>
+      </FilterSubsection>
 
-      <div>
-        <div class="text-subtitle-2 font-weight-medium mb-2">
-          {{ $t("common.abv") }} (%)
-        </div>
+      <FilterSubsection :title="`${$t('common.abv')} (%)`" filter-key="abv">
         <MinMaxFilter filterId="abv" suffix="%" />
-      </div>
+      </FilterSubsection>
 
-      <div>
-        <div class="text-subtitle-2 font-weight-medium mb-2">
-          {{ $t("common.categories") }}
-        </div>
+      <FilterSubsection
+        :title="$t('common.categories')"
+        filter-key="categories"
+      >
         <CategoryFilter :facets="facets" />
-      </div>
+      </FilterSubsection>
     </div>
   </DrawerSection>
 </template>
@@ -34,8 +28,9 @@ import type { Facet } from "@bsaq/types";
 import DrawerSection from "~/components/common/DrawerSection.vue";
 import MinMaxFilter from "./MinMaxFilter.vue";
 import CategoryFilter from "./CategoryFilter.vue";
+import FilterSubsection from "./FilterSubsection.vue";
 
-defineProps<{
+const props = defineProps<{
   facets: Facet[];
 }>();
 </script>
