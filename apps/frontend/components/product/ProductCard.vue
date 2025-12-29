@@ -3,6 +3,7 @@
     :class="['h-100', 'd-flex', 'flex-column', 'transition-swing']"
     :variant="isList ? 'outlined' : 'elevated'"
     hover
+    style="cursor: default !important"
   >
     <!-- List View Layout -->
     <div v-if="isList" class="d-flex flex-row align-center h-100">
@@ -165,6 +166,7 @@ const formatPrice = (price: number | null | undefined) => {
 <style scoped>
 .line-clamp-2 {
   display: -webkit-box;
+  line-clamp: 2;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;

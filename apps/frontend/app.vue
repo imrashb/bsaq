@@ -1,5 +1,23 @@
 <script setup lang="ts">
 import AppHeader from "./components/layout/AppHeader.vue";
+
+const { t, locale } = useI18n();
+
+useHead({
+  titleTemplate: (titleChunk) => {
+    return titleChunk ? `${titleChunk} - BSAQ` : "BSAQ";
+  },
+  title: computed(() => t("app.subtitle")),
+  meta: [
+    {
+      name: "description",
+      content: computed(() => t("home.subtitle")),
+    },
+  ],
+  htmlAttrs: {
+    lang: computed(() => locale.value),
+  },
+});
 </script>
 
 <template>
