@@ -38,9 +38,7 @@ export class ProductService {
       ...filterOptions,
     });
 
-    // Quick count for meta (optional, but good for pagination)
     const total = await this.repo.count(filterOptions);
-    const ranges = await this.repo.getRanges();
     const facets = await this.repo.getFacets(filterOptions);
 
     return {
@@ -49,7 +47,6 @@ export class ProductService {
         page,
         pageSize,
         total,
-        ...ranges,
         facets,
       },
     };

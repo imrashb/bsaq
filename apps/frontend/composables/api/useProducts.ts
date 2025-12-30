@@ -1,4 +1,4 @@
-import { type GetProductsResponse } from "@bsaq/types";
+import { type GetProductsResponse, type GetProductsQuery } from "@bsaq/types";
 import { computed, watch } from "vue";
 import { useInjectFilters } from "~/composables/useFilters";
 import { refDebounced } from "@vueuse/core";
@@ -13,7 +13,7 @@ export const useProducts = () => {
   const debouncedQuery = refDebounced(
     computed(() => ({
       pageSize: itemsPerPage.value,
-      sortBy: sortBy.value,
+      sort: sortBy.value,
       search: search.value,
       categories: categories.value,
       minPrice: price.value[0],
@@ -36,7 +36,7 @@ export const useProducts = () => {
     { deep: true, flush: "sync" }
   );
 
-  const queryParams = computed(() => ({
+  const queryParams = computed<GetProductsQuery>(() => ({
     ...debouncedQuery.value,
     page: page.value,
   }));

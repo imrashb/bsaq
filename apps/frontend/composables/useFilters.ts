@@ -32,8 +32,12 @@ export type RangeFilterKeys = {
 
 const FilterStateKey: InjectionKey<FilterState> = Symbol("FilterState");
 
+// Default range values
+export const DEFAULT_PRICE_MAX = 200;
+export const DEFAULT_ABV_MAX = 100;
+export const DEFAULT_VALUE_MAX = 100;
+
 export const DEFAULT_RANGE_MIN = 0;
-export const DEFAULT_RANGE_MAX = 0;
 
 const DEFAULTS: FilterValues = {
   page: 1,
@@ -41,9 +45,9 @@ const DEFAULTS: FilterValues = {
   sortBy: ProductSortOptions.ValueDesc,
   search: "",
   categories: [],
-  price: [DEFAULT_RANGE_MIN, DEFAULT_RANGE_MAX],
-  abv: [DEFAULT_RANGE_MIN, DEFAULT_RANGE_MAX],
-  value: [DEFAULT_RANGE_MIN, DEFAULT_RANGE_MAX],
+  price: [DEFAULT_RANGE_MIN, DEFAULT_PRICE_MAX],
+  abv: [DEFAULT_RANGE_MIN, DEFAULT_ABV_MAX],
+  value: [DEFAULT_RANGE_MIN, DEFAULT_VALUE_MAX],
 };
 
 export function useProvideFilters(): FilterState {
