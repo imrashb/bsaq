@@ -4,7 +4,17 @@
   "tasks": {
     "build": {
       "dependsOn": ["^build"],
-      "outputs": [".next/**", "!.next/cache/**", "dist/**"]
+      "outputs": [".next/**", "!.next/cache/**", "dist/**"],
+      "env": [
+        "GRAPHQL_ENDPOINT",
+        "API_KEY",
+        "MAGENTO_ENVIRONMENT_ID",
+        "MAGENTO_WEBSITE_CODE",
+        "MAGENTO_STORE_CODE",
+        "MAGENTO_STORE_VIEW_CODE",
+        "DATABASE_URL",
+        "NUXT_PUBLIC_API_BASE"
+      ]
     },
     "lint": {
       "dependsOn": ["^lint"]
