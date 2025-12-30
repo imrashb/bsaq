@@ -56,5 +56,8 @@
   },
   "errors": {
     "loading": "Unable to load products"
+  },
+  "footer": {
+    "disclaimer": "Not affiliated with SAQ. This is a personal/educational project for non-commercial use."
   }
 }
