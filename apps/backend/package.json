@@ -4,14 +4,17 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "build": "graphql-codegen -r dotenv/config --config codegen.ts && prisma generate",
-    "dev": "yarn build && cross-env PAGE_SIZE=500 DISABLE_CRON=true tsx --watch src/main.ts",
-    "verify-db": "tsx src/scripts/verify-db.ts",
+    "build": "yarn codegen && esbuild src/main.ts --bundle --platform=node --target=node22 --outfile=dist/main.js --format=esm --packages=external",
+    "codegen": "graphql-codegen -r dotenv/config --config codegen.ts && prisma generate",
+    "start": "node dist/main.js",
+    "dev": "yarn codegen && cross-env PAGE_SIZE=500 DISABLE_CRON=true tsx --watch src/main.ts",
     "watch": "graphql-codegen -w"
   },
   "license": "MIT",
   "dependencies": {
     "@apollo/client": "^4.0.11",
+    "@bsaq/types": "*",
+    "@fastify/cors": "^11.2.0",
     "@prisma/adapter-pg": "^7.2.0",
     "@prisma/client": "^7.2.0",
     "ajv": "^8.17.1",
@@ -23,8 +26,7 @@
     "node-cron": "^4.2.1",
     "pg": "^8.16.3",
     "rxjs": "^7.8.2",
-    "zod": "^4.2.1",
-    "@bsaq/types": "*"
+    "zod": "^4.2.1"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.2",
@@ -33,6 +35,7 @@
     "@types/node": "^25.0.3",
     "@types/pg": "^8.16.0",
     "cross-env": "^10.1.0",
+    "esbuild": "^0.27.2",
     "eslint": "^9.39.2",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-prettier": "^5.5.4",

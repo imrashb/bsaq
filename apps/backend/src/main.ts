@@ -4,6 +4,7 @@ import {
   serializerCompiler,
   validatorCompiler,
 } from "fastify-type-provider-zod";
+import cors from "@fastify/cors";
 import { initCronJobs, runStartupJobs } from "./jobs/index.js";
 import { productController } from "./controllers/ProductController.js";
 
@@ -14,7 +15,11 @@ const fastify = Fastify({
 fastify.setValidatorCompiler(validatorCompiler);
 fastify.setSerializerCompiler(serializerCompiler);
 
-fastify.register(productController);
+fastify.register(cors, {
+  origin: true,
+});
+
+fastify.register(productController, { prefix: "/api" });
 
 // Startup sequence
 const start = async () => {

@@ -56,7 +56,15 @@ export default defineNuxtConfig({
       },
     },
   },
+  runtimeConfig: {
+    public: {
+      apiBase: process.env.NUXT_PUBLIC_API_BASE || "http://localhost:3001",
+    },
+  },
   routeRules: {
-    "/api/**": { proxy: "http://localhost:3001/**" },
+    "/api/**": {
+      proxy:
+        (process.env.NUXT_PUBLIC_API_BASE || "http://localhost:3001") + "/**",
+    },
   },
 });

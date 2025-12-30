@@ -38,7 +38,10 @@ export const useProducts = () => {
     page: page.value,
   }));
 
+  const config = useRuntimeConfig();
+
   return useFetch<GetProductsResponse>("/api/products", {
+    baseURL: config.public.apiBase as string,
     query: queryParams,
   });
 };
