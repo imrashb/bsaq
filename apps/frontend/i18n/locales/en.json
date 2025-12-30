@@ -51,6 +51,7 @@
   },
   "product": {
     "mlPerDollar": "ml/$",
+    "mlPerDollarFilter": "Value (ml/$)",
     "mlPerDollarTooltip": "Higher value = more alcohol for your money"
   },
   "errors": {

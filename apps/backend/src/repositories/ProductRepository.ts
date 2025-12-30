@@ -61,8 +61,19 @@ export class ProductRepository {
     maxPrice?: number;
     minAbv?: number;
     maxAbv?: number;
+    minPureAlcoholPerDollar?: number;
+    maxPureAlcoholPerDollar?: number;
   }): Prisma.ProductWhereInput {
-    const { search, categories, minPrice, maxPrice, minAbv, maxAbv } = options;
+    const {
+      search,
+      categories,
+      minPrice,
+      maxPrice,
+      minAbv,
+      maxAbv,
+      minPureAlcoholPerDollar,
+      maxPureAlcoholPerDollar,
+    } = options;
     const where: Prisma.ProductWhereInput = {};
 
     if (search) {
@@ -89,6 +100,17 @@ export class ProductRepository {
       if (maxAbv !== undefined) where.abv.lte = maxAbv;
     }
 
+    if (
+      minPureAlcoholPerDollar !== undefined ||
+      maxPureAlcoholPerDollar !== undefined
+    ) {
+      where.pureAlcoholPerDollar = {};
+      if (minPureAlcoholPerDollar !== undefined)
+        where.pureAlcoholPerDollar.gte = minPureAlcoholPerDollar;
+      if (maxPureAlcoholPerDollar !== undefined)
+        where.pureAlcoholPerDollar.lte = maxPureAlcoholPerDollar;
+    }
+
     return where;
   }
 
@@ -102,6 +124,8 @@ export class ProductRepository {
     maxPrice?: number;
     minAbv?: number;
     maxAbv?: number;
+    minPureAlcoholPerDollar?: number;
+    maxPureAlcoholPerDollar?: number;
   }): Promise<Product[]> {
     const { page, pageSize, sort } = options;
     const skip = (page - 1) * pageSize;
@@ -148,6 +172,8 @@ export class ProductRepository {
     maxPrice?: number;
     minAbv?: number;
     maxAbv?: number;
+    minPureAlcoholPerDollar?: number;
+    maxPureAlcoholPerDollar?: number;
   }): Promise<number> {
     const where = this.buildWhereClause(options);
     return this.prisma.product.count({ where });
@@ -160,6 +186,8 @@ export class ProductRepository {
     maxPrice?: number;
     minAbv?: number;
     maxAbv?: number;
+    minPureAlcoholPerDollar?: number;
+    maxPureAlcoholPerDollar?: number;
   }): Promise<Facet[]> {
     const { categories, ...otherOptions } = options;
     const where = this.buildWhereClause(otherOptions);
@@ -183,12 +211,34 @@ export class ProductRepository {
     }));
   }
 
-  async getMaxPureAlcoholPerDollar(): Promise<number> {
+  async getRanges(): Promise<{
+    minPrice: number;
+    maxPrice: number;
+    minAbv: number;
+    maxAbv: number;
+    minPureAlcoholPerDollar: number;
+    maxPureAlcoholPerDollar: number;
+  }> {
     const result = await this.prisma.product.aggregate({
+      _min: {
+        currentPrice: true,
+        abv: true,
+        pureAlcoholPerDollar: true,
+      },
       _max: {
+        currentPrice: true,
+        abv: true,
         pureAlcoholPerDollar: true,
       },
     });
-    return result._max.pureAlcoholPerDollar as number; // Fallback default
+
+    return {
+      minPrice: result._min.currentPrice ?? 0,
+      maxPrice: result._max.currentPrice ?? 200,
+      minAbv: result._min.abv ?? 0,
+      maxAbv: result._max.abv ?? 100,
+      minPureAlcoholPerDollar: result._min.pureAlcoholPerDollar ?? 0,
+      maxPureAlcoholPerDollar: result._max.pureAlcoholPerDollar ?? 20,
+    };
   }
 }

@@ -12,7 +12,7 @@
         :prefix="prefix"
         :suffix="suffix"
         :placeholder="$t('common.min')"
-        :max="model[1]"
+        :step="step"
       ></v-text-field>
       <span class="text-medium-emphasis">-</span>
       <v-text-field
@@ -26,7 +26,7 @@
         :prefix="prefix"
         :suffix="suffix"
         :placeholder="$t('common.max')"
-        :min="model[0]"
+        :step="step"
       ></v-text-field>
     </div>
   </div>
@@ -38,22 +38,56 @@ import {
   useInjectFilters,
 } from "~/composables/useFilters";
 
-const props = defineProps<{
+const {
+  filterId,
+  prefix,
+  suffix,
+  step = 1,
+} = defineProps<{
   filterId: RangeFilterKeys;
   prefix?: string;
   suffix?: string;
+  step?: number;
 }>();
 
 const filterState = useInjectFilters();
-const model = filterState[props.filterId];
+const model = filterState[filterId];
+
+const roundTo2Decimals = (num: number): number => {
+  return Math.round(num * 100) / 100;
+};
+
+// Simplified parser: parses number, handles NaN. No bounds passed here (bounding logic separate).
+const parseNumber = (val: string | number): number | null => {
+  let numVal = Number(String(val));
+  return isNaN(numVal) ? null : numVal;
+};
 
 const updateMin = (val: string | number) => {
-  const numVal = Number(val);
-  model.value = [Math.min(numVal, model.value[1]), model.value[1]];
+  let numVal = parseNumber(val);
+  if (numVal === null) return;
+
+  const [currentMin, currentMax] = model.value;
+
+  numVal = Math.max(0, Math.min(numVal, currentMax));
+  numVal = roundTo2Decimals(numVal);
+
+  if (numVal !== currentMin) {
+    model.value = [numVal, currentMax];
+  }
 };
 
 const updateMax = (val: string | number) => {
-  const numVal = Number(val);
-  model.value = [model.value[0], Math.max(numVal, model.value[0])];
+  let numVal = parseNumber(val);
+  if (numVal === null) return;
+
+  const [currentMin, currentMax] = model.value;
+
+  numVal = Math.max(currentMin, numVal);
+  numVal = roundTo2Decimals(numVal);
+
+  if (numVal !== currentMax) {
+    model.value = [currentMin, numVal];
+  }
 };
 </script>

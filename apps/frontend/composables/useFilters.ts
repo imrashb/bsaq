@@ -7,6 +7,7 @@ import { useStorage } from "@vueuse/core";
 export interface FilterValues {
   price: [number, number];
   abv: [number, number];
+  value: [number, number];
   categories: string[];
   search: string;
   sortBy: ProductSortOption;
@@ -31,14 +32,22 @@ export type RangeFilterKeys = {
 
 const FilterStateKey: InjectionKey<FilterState> = Symbol("FilterState");
 
+// Default range values
+export const DEFAULT_PRICE_MAX = 200;
+export const DEFAULT_ABV_MAX = 100;
+export const DEFAULT_VALUE_MAX = 100;
+
+export const DEFAULT_RANGE_MIN = 0;
+
 const DEFAULTS: FilterValues = {
   page: 1,
   itemsPerPage: 20,
   sortBy: ProductSortOptions.ValueDesc,
   search: "",
   categories: [],
-  price: [0, 200],
-  abv: [0, 100],
+  price: [DEFAULT_RANGE_MIN, DEFAULT_PRICE_MAX],
+  abv: [DEFAULT_RANGE_MIN, DEFAULT_ABV_MAX],
+  value: [DEFAULT_RANGE_MIN, DEFAULT_VALUE_MAX],
 };
 
 export function useProvideFilters(): FilterState {
@@ -51,6 +60,7 @@ export function useProvideFilters(): FilterState {
     categories: ref<string[]>([...DEFAULTS.categories]),
     price: ref<[number, number]>([...DEFAULTS.price]),
     abv: ref<[number, number]>([...DEFAULTS.abv]),
+    value: ref<[number, number]>([...DEFAULTS.value]),
   };
 
   const resetFilter = <K extends keyof FilterValues>(key: K) => {

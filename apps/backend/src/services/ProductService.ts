@@ -13,14 +13,11 @@ export class ProductService {
       page = 1,
       pageSize = 10,
       sort,
-      search,
       categories: rawCategories,
-      minPrice,
-      maxPrice,
-      minAbv,
-      maxAbv,
+      ...filterParams
     } = query;
 
+    // Process categories (convert string to array if needed)
     let categories: string[] | undefined;
     if (Array.isArray(rawCategories)) {
       categories = rawCategories;
@@ -28,13 +25,10 @@ export class ProductService {
       categories = rawCategories.split(",");
     }
 
+    // Combine processed categories with all other filter params
     const filterOptions = {
-      search,
+      ...filterParams,
       categories,
-      minPrice,
-      maxPrice,
-      minAbv,
-      maxAbv,
     };
 
     const products = await this.repo.findAll({
@@ -44,10 +38,7 @@ export class ProductService {
       ...filterOptions,
     });
 
-    // Quick count for meta (optional, but good for pagination)
     const total = await this.repo.count(filterOptions);
-    const maxPureAlcoholPerDollar =
-      await this.repo.getMaxPureAlcoholPerDollar();
     const facets = await this.repo.getFacets(filterOptions);
 
     return {
@@ -56,7 +47,6 @@ export class ProductService {
         page,
         pageSize,
         total,
-        maxPureAlcoholPerDollar,
         facets,
       },
     };

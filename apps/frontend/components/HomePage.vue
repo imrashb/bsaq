@@ -40,21 +40,14 @@
 
         <!-- Product Grid -->
         <ProductGrid
-          v-if="!pending && !error"
+          v-if="!error"
           :products="products"
           :view-mode="viewMode"
+          :loading="pending"
           :max-pure-alcohol-per-dollar="maxPureAlcoholPerDollar"
         />
 
-        <!-- Loading / Error States -->
-        <div
-          v-else-if="pending"
-          class="d-flex justify-center align-center py-12"
-        >
-          <v-progress-circular indeterminate color="primary" size="64" />
-        </div>
-
-        <div v-else class="text-center py-12">
+        <div v-if="error" class="text-center py-12">
           <v-icon size="64" color="error" class="mb-4">mdi-alert-circle</v-icon>
           <div class="text-h6 text-error">
             {{ $t("home.error") }}
@@ -104,9 +97,7 @@ const { data: response, pending, error, refresh } = useProducts();
 
 const products = computed(() => response.value?.data || []);
 const total = computed(() => response.value?.meta?.total || 0);
-const maxPureAlcoholPerDollar = computed(
-  () => response.value?.meta?.maxPureAlcoholPerDollar || 15
-);
+const maxPureAlcoholPerDollar = computed(() => 15);
 const facets = computed(() => response.value?.meta?.facets || []);
 
 const totalPages = computed(() => Math.ceil(total.value / itemsPerPage.value));

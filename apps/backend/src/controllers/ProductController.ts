@@ -7,6 +7,38 @@ import { GetProductsResponse } from "@bsaq/types";
 export async function productController(fastify: FastifyInstance) {
   const service = new ProductService();
 
+  type QueryData = {
+    page: number;
+    pageSize: number;
+    sort?: string;
+    search?: string;
+    categories?: string | string[];
+    minPrice?: number;
+    maxPrice?: number;
+    minAbv?: number;
+    maxAbv?: number;
+    minPureAlcoholPerDollar?: number;
+    maxPureAlcoholPerDollar?: number;
+  };
+
+  // Helper to create min/max range validators
+  const createRangeValidator = <K extends keyof QueryData>(
+    minKey: K,
+    maxKey: K,
+  ) => {
+    return [
+      (data: QueryData) => {
+        if (data[minKey] !== undefined && data[maxKey] !== undefined) {
+          return (data[minKey] as number) <= (data[maxKey] as number);
+        }
+        return true;
+      },
+      {
+        message: `${String(minKey)} must be less than or equal to ${String(maxKey)}`,
+      },
+    ] as const;
+  };
+
   const QuerySchema = z
     .object({
       page: z.coerce.number().min(1).default(1),
@@ -18,24 +50,16 @@ export async function productController(fastify: FastifyInstance) {
       maxPrice: z.coerce.number().optional(),
       minAbv: z.coerce.number().optional(),
       maxAbv: z.coerce.number().optional(),
+      minPureAlcoholPerDollar: z.coerce.number().optional(),
+      maxPureAlcoholPerDollar: z.coerce.number().optional(),
     })
+    .refine(...createRangeValidator("minPrice", "maxPrice"))
+    .refine(...createRangeValidator("minAbv", "maxAbv"))
     .refine(
-      (data) => {
-        if (data.minPrice !== undefined && data.maxPrice !== undefined) {
-          return data.minPrice <= data.maxPrice;
-        }
-        return true;
-      },
-      { message: "minPrice must be less than or equal to maxPrice" },
-    )
-    .refine(
-      (data) => {
-        if (data.minAbv !== undefined && data.maxAbv !== undefined) {
-          return data.minAbv <= data.maxAbv;
-        }
-        return true;
-      },
-      { message: "minAbv must be less than or equal to maxAbv" },
+      ...createRangeValidator(
+        "minPureAlcoholPerDollar",
+        "maxPureAlcoholPerDollar",
+      ),
     );
 
   fastify.withTypeProvider<ZodTypeProvider>().get(

@@ -5,6 +5,17 @@
     hover
     style="cursor: default !important"
   >
+    <v-overlay
+      :model-value="loading"
+      contained
+      class="align-center justify-center product-card-overlay"
+      persistent
+      no-click-animation
+      z-index="2"
+    >
+      <v-progress-circular indeterminate color="primary" size="32" />
+    </v-overlay>
+
     <!-- List View Layout -->
     <div v-if="isList" class="d-flex flex-row align-center h-100">
       <v-avatar class="ma-3 pa-3" size="128" rounded="lg">
@@ -155,6 +166,7 @@ const props = defineProps<{
   product: Product;
   isList?: boolean;
   maxPureAlcoholPerDollar?: number;
+  loading?: boolean;
 }>();
 
 const formatPrice = (price: number | null | undefined) => {
@@ -177,5 +189,9 @@ const formatPrice = (price: number | null | undefined) => {
 .backdrop-blur {
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
+}
+.product-card-overlay :deep(.v-overlay__scrim) {
+  backdrop-filter: blur(5px);
+  background: rgba(var(--v-theme-surface), 0.7) !important;
 }
 </style>
