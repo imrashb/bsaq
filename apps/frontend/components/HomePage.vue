@@ -85,9 +85,13 @@ import ProductGrid from "~/components/product/ProductGrid.vue";
 import ProductToolbar from "~/components/product/ProductToolbar.vue";
 import ProductFilters from "~/components/product/ProductFilters.vue";
 import { useProducts } from "~/composables/api/useProducts";
-import { useInjectFilters } from "~/composables/useFilters";
+import {
+  useInjectFilters,
+  DEFAULT_RANGE_MIN,
+  DEFAULT_RANGE_MAX,
+} from "~/composables/useFilters";
 
-const { page, itemsPerPage } = useInjectFilters();
+const { page, itemsPerPage, price, abv, value } = useInjectFilters();
 
 const viewModePreference = useStorage<"grid" | "list">(
   "bsaq-view-mode",
@@ -110,6 +114,45 @@ const maxPureAlcoholPerDollar = computed(
 const facets = computed(() => response.value?.meta?.facets || []);
 
 const totalPages = computed(() => Math.ceil(total.value / itemsPerPage.value));
+
+// Initialize filter ranges from metadata on first load
+const rangesInitialized = ref(false);
+const roundTo2 = (num: number) => Math.round(num * 100) / 100;
+
+watch(
+  response,
+  (newResponse) => {
+    if (!rangesInitialized.value && newResponse?.meta) {
+      const meta = newResponse.meta;
+
+      // Only initialize if current values are still at defaults
+      if (
+        price.value[0] === DEFAULT_RANGE_MIN &&
+        price.value[1] === DEFAULT_RANGE_MAX
+      ) {
+        price.value = [DEFAULT_RANGE_MIN, roundTo2(meta.maxPrice)];
+      }
+      if (
+        abv.value[0] === DEFAULT_RANGE_MIN &&
+        abv.value[1] === DEFAULT_RANGE_MAX
+      ) {
+        abv.value = [DEFAULT_RANGE_MIN, roundTo2(meta.maxAbv)];
+      }
+      if (
+        value.value[0] === DEFAULT_RANGE_MIN &&
+        value.value[1] === DEFAULT_RANGE_MAX
+      ) {
+        value.value = [
+          DEFAULT_RANGE_MIN,
+          roundTo2(meta.maxPureAlcoholPerDollar),
+        ];
+      }
+
+      rangesInitialized.value = true;
+    }
+  },
+  { immediate: true }
+);
 
 watch(page, () => {
   window.scrollTo({ top: 0, behavior: "smooth" });

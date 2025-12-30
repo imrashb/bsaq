@@ -14,6 +14,13 @@
       </FilterSubsection>
 
       <FilterSubsection
+        :title="$t('product.mlPerDollarFilter')"
+        filter-key="value"
+      >
+        <MinMaxFilter filterId="value" suffix=" ml/$" :step="0.1" />
+      </FilterSubsection>
+
+      <FilterSubsection
         :title="$t('common.categories')"
         filter-key="categories"
       >

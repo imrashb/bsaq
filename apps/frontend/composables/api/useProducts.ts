@@ -7,7 +7,8 @@ export const useProducts = () => {
   const filterState = useInjectFilters();
   const { page } = filterState;
 
-  const { search, sortBy, itemsPerPage, categories, price, abv } = filterState;
+  const { search, sortBy, itemsPerPage, categories, price, abv, value } =
+    filterState;
 
   const debouncedQuery = refDebounced(
     computed(() => ({
@@ -19,6 +20,8 @@ export const useProducts = () => {
       maxPrice: price.value[1],
       minAbv: abv.value[0],
       maxAbv: abv.value[1],
+      minPureAlcoholPerDollar: value.value[0],
+      maxPureAlcoholPerDollar: value.value[1],
     })),
     500
   );

@@ -51,6 +51,7 @@
   },
   "product": {
     "mlPerDollar": "ml/$",
+    "mlPerDollarFilter": "Valeur (ml/$)",
     "mlPerDollarTooltip": "Plus la valeur est élevée, plus vous obtenez d'alcool pour votre dollar"
   },
   "errors": {

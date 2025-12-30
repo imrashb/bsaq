@@ -4,6 +4,11 @@ export interface GetProductsMeta {
   page: number;
   pageSize: number;
   total: number;
+  minPrice: number;
+  maxPrice: number;
+  minAbv: number;
+  maxAbv: number;
+  minPureAlcoholPerDollar: number;
   maxPureAlcoholPerDollar: number;
   facets: Facet[];
 }
@@ -23,4 +28,6 @@ export interface GetProductsQuery {
   maxPrice?: number;
   minAbv?: number;
   maxAbv?: number;
+  minPureAlcoholPerDollar?: number;
+  maxPureAlcoholPerDollar?: number;
 }

@@ -13,6 +13,7 @@
         :suffix="suffix"
         :placeholder="$t('common.min')"
         :max="model[1]"
+        :step="step"
       ></v-text-field>
       <span class="text-medium-emphasis">-</span>
       <v-text-field
@@ -27,6 +28,7 @@
         :suffix="suffix"
         :placeholder="$t('common.max')"
         :min="model[0]"
+        :step="step"
       ></v-text-field>
     </div>
   </div>
@@ -38,22 +40,32 @@ import {
   useInjectFilters,
 } from "~/composables/useFilters";
 
-const props = defineProps<{
+const {
+  filterId,
+  prefix,
+  suffix,
+  step = 1,
+} = defineProps<{
   filterId: RangeFilterKeys;
   prefix?: string;
   suffix?: string;
+  step?: number;
 }>();
 
 const filterState = useInjectFilters();
-const model = filterState[props.filterId];
+const model = filterState[filterId];
+
+const roundTo2Decimals = (num: number): number => {
+  return Math.round(num * 100) / 100;
+};
 
 const updateMin = (val: string | number) => {
-  const numVal = Number(val);
+  const numVal = roundTo2Decimals(Number(val));
   model.value = [Math.min(numVal, model.value[1]), model.value[1]];
 };
 
 const updateMax = (val: string | number) => {
-  const numVal = Number(val);
+  const numVal = roundTo2Decimals(Number(val));
   model.value = [model.value[0], Math.max(numVal, model.value[0])];
 };
 </script>
