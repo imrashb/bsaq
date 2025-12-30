@@ -1,14 +1,5 @@
-import "dotenv/config";
 import type { CodegenConfig } from "@graphql-codegen/cli";
 
-console.error("API_KEY present:", !!process.env.API_KEY);
-console.error(
-  "Available Env Keys:",
-  Object.keys(process.env).filter(
-    (k) => k.includes("API") || k.includes("GRAPHQL") || k.includes("MAGENTO"),
-  ),
-);
-console.error("ALL AVAILABLE ENV KEYS:", Object.keys(process.env));
 const config: CodegenConfig = {
   overwrite: true,
   // Schema URL with headers
