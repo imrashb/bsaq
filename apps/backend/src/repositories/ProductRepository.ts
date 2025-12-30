@@ -1,5 +1,5 @@
 import { PrismaPg } from "@prisma/adapter-pg";
-import { Prisma, PrismaClient } from "../generated/prisma/client.js";
+import { Prisma, PrismaClient } from "../generated/prisma/client";
 import { ProductSortOptions, type Product, type Facet } from "@bsaq/types";
 
 export class ProductRepository {
@@ -11,7 +11,7 @@ export class ProductRepository {
         connectionString: process.env.DATABASE_URL,
       },
       {
-        schema: "bsaq",
+        schema: process.env.DATABASE_SCHEMA || "public",
       },
     );
     this.prisma = new PrismaClient({ adapter });

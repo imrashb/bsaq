@@ -7,7 +7,9 @@
   ],
   "scripts": {
     "build": "turbo run build",
-    "dev": "turbo run dev",
+    "dev": "dotenv -e apps/backend/.env -- turbo run dev",
+    "build:render": "yarn workspace @bsaq/types build; dotenv -e /etc/secrets/.env -- turbo build --filter=@bsaq/backend --env-mode=loose; dotenv -e /etc/secrets/.env -- yarn workspace @bsaq/backend db:migrate",
+    "start:render": "dotenv -e /etc/secrets/.env -- yarn workspace @bsaq/backend start",
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\""
   },
