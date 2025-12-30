@@ -7,7 +7,7 @@
     "build": "yarn codegen && esbuild src/main.ts --bundle --platform=node --target=node22 --outfile=dist/main.js --format=esm --packages=external",
     "codegen": "graphql-codegen -r dotenv/config --config codegen.ts && prisma generate",
     "start": "node dist/main.js",
-    "dev": "yarn codegen && cross-env PAGE_SIZE=500 DISABLE_CRON=true tsx --watch src/main.ts",
+    "dev": "yarn codegen && cross-env PAGE_SIZE=500 dotenv -- tsx --watch src/main.ts",
     "db:migrate": "prisma migrate deploy",
     "watch": "graphql-codegen -w"
   },
