@@ -8,6 +8,7 @@
     "codegen": "graphql-codegen -r dotenv/config --config codegen.ts && prisma generate",
     "start": "node dist/main.js",
     "dev": "yarn codegen && cross-env PAGE_SIZE=500 DISABLE_CRON=true tsx --watch src/main.ts",
+    "db:migrate": "prisma migrate deploy",
     "watch": "graphql-codegen -w"
   },
   "license": "MIT",
