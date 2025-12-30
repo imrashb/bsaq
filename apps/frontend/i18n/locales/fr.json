@@ -56,5 +56,8 @@
   },
   "errors": {
     "loading": "Impossible de charger les produits"
+  },
+  "footer": {
+    "disclaimer": "Non affilié à la SAQ. Ce site est un projet personnel à but éducatif et non commercial."
   }
 }
