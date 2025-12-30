@@ -14,7 +14,8 @@
   "home": {
     "title": "Trouvez votre aubaine",
     "subtitle": "Découvrez les meilleurs rapports qualité-prix à la SAQ. Plus de millilitres d'alcool pur pour votre argent.",
-    "results": "{count} produits"
+    "results": "{count} produits",
+    "error": "Impossible de charger les produits"
   },
   "common": {
     "sort": "Trier par",

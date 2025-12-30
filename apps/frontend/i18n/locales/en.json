@@ -14,7 +14,8 @@
   "home": {
     "title": "Find Your Deal",
     "subtitle": "Discover the best value at the SAQ. More milliliters of pure alcohol for your money.",
-    "results": "{count} products"
+    "results": "{count} products",
+    "error": "Unable to load products"
   },
   "common": {
     "sort": "Sort by",
