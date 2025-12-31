@@ -5,6 +5,8 @@ export type ProductAttributes = {
   country: string;
   isAvailableInStore: boolean;
   name: string;
+  reviewsAverageRating: number | null;
+  reviewsCountRating: number | null;
 };
 
 export type Product = ProductAttributes & {
@@ -16,6 +18,8 @@ export type Product = ProductAttributes & {
   pureAlcoholMl: number | null;
   pureAlcoholPerDollar: number | null;
   pureAlcoholPerOriginalDollar: number | null;
+  reviewsAverageRating: number | null;
+  reviewsCountRating: number | null;
 };
 
 export const ProductSortOptions = {

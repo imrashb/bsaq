@@ -27,7 +27,7 @@
       :description="$t('product.mlPerDollarTooltip')"
       :value="value"
       :max="max"
-      :min-threshold="max / 3"
+      :min-threshold="minThreshold"
       min-label="0"
       :max-label="`${max.toFixed(0)}`"
       :value-label="`${value.toFixed(2)} ml/$`"
@@ -50,15 +50,17 @@ const percentage = computed(() =>
   Math.min(100, (props.value / props.max) * 100)
 );
 
+const minThreshold = computed(() => props.max / 3);
+
 const color = computed(() => {
   const current = props.value;
   const max = props.max;
-  const minThreshold = max / 3;
 
-  if (current < minThreshold) return METER_COLORS.BAD;
+  if (current < minThreshold.value) return METER_COLORS.BAD;
 
   // Map [minThreshold, max] to hue [30, 120] (Orange -> Green)
-  const normalized = (current - minThreshold) / (max - minThreshold);
+  const normalized =
+    (current - minThreshold.value) / (max - minThreshold.value);
   const hue = 30 + normalized * 90; // Start at 30 (orange), go up to 120 (green)
   return `hsl(${Math.min(120, Math.max(30, hue))}, 85%, 45%)`;
 });

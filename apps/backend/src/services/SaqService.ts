@@ -57,6 +57,16 @@ export class SaqService {
       key: "isAvailableInStore",
       transform: (value) => value === "1",
     },
+    {
+      name: "reviews_average_rating",
+      key: "reviewsAverageRating",
+      transform: (value) => parseFloat(value),
+    },
+    {
+      name: "reviews_count_rating",
+      key: "reviewsCountRating",
+      transform: (value) => parseInt(value, 10),
+    },
   ];
 
   constructor() {

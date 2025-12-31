@@ -40,6 +40,7 @@ export class ProductService {
 
     const total = await this.repo.count(filterOptions);
     const facets = await this.repo.getFacets(filterOptions);
+    const { maxPureAlcoholPerDollar } = await this.repo.getRanges();
 
     return {
       data: products,
@@ -48,6 +49,7 @@ export class ProductService {
         pageSize,
         total,
         facets,
+        maxPureAlcoholPerDollar,
       },
     };
   }

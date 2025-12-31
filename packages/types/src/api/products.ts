@@ -5,6 +5,7 @@ export interface GetProductsMeta {
   pageSize: number;
   total: number;
   facets: Facet[];
+  maxPureAlcoholPerDollar: number;
 }
 
 export interface GetProductsResponse {
