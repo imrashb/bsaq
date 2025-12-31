@@ -86,9 +86,8 @@ const viewModePreference = useStorage<"grid" | "list">(
   "bsaq-view-mode",
   "grid"
 );
-const drawer = ref(true);
-
 const { mdAndUp } = useDisplay();
+const drawer = ref<boolean | null>(null);
 const viewMode = computed(() =>
   mdAndUp.value ? viewModePreference.value : "grid"
 );
@@ -97,7 +96,9 @@ const { data: response, pending, error, refresh } = useProducts();
 
 const products = computed(() => response.value?.data || []);
 const total = computed(() => response.value?.meta?.total || 0);
-const maxPureAlcoholPerDollar = computed(() => 15);
+const maxPureAlcoholPerDollar = computed(
+  () => response.value?.meta?.maxPureAlcoholPerDollar || 15
+);
 const facets = computed(() => response.value?.meta?.facets || []);
 
 const totalPages = computed(() => Math.ceil(total.value / itemsPerPage.value));

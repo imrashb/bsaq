@@ -34,6 +34,8 @@ export class ProductRepository {
         pureAlcoholMl: product.pureAlcoholMl,
         pureAlcoholPerDollar: product.pureAlcoholPerDollar,
         pureAlcoholPerOriginalDollar: product.pureAlcoholPerOriginalDollar,
+        reviewsAverageRating: product.reviewsAverageRating,
+        reviewsCountRating: product.reviewsCountRating,
       },
       create: {
         sku: product.sku,
@@ -50,6 +52,8 @@ export class ProductRepository {
         pureAlcoholMl: product.pureAlcoholMl,
         pureAlcoholPerDollar: product.pureAlcoholPerDollar,
         pureAlcoholPerOriginalDollar: product.pureAlcoholPerOriginalDollar,
+        reviewsAverageRating: product.reviewsAverageRating,
+        reviewsCountRating: product.reviewsCountRating,
       },
     });
   }
