@@ -48,7 +48,9 @@
         />
 
         <div v-if="error" class="text-center py-12">
-          <v-icon size="64" color="error" class="mb-4">mdi-alert-circle</v-icon>
+          <v-icon size="64" color="error" class="mb-4">
+            mdi-alert-circle
+          </v-icon>
           <div class="text-h6 text-error">
             {{ $t("home.error") }}
           </div>
@@ -62,9 +64,10 @@
           <v-pagination
             v-model="page"
             :length="totalPages"
-            :total-visible="7"
+            :total-visible="mdAndUp ? 7 : 4"
+            :density="mdAndUp ? undefined : 'compact'"
             rounded="circle"
-          ></v-pagination>
+          />
         </div>
       </v-col>
     </v-row>
